@@ -19,7 +19,7 @@ function Sitedata() {
   const [users,setUser] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('http://localhost:4000/app/getlocation')
+          axios.post('https://likasmanileno-backend.herokuapp.com/app/getlocation')
               .then(res => {
                   console.log(res);
                   setUser(res.data);
@@ -46,7 +46,7 @@ function Sitedata() {
       address:address           
     }
     console.log(data)
-    axios.post('http://localhost:4000/app/deletelocation',data)
+    axios.post('https://likasmanileno-backend.herokuapp.com/app/deletelocation',data)
     .then(res => {
       if(res.data != null){
         alert("deleted")
