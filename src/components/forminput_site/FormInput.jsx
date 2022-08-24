@@ -34,7 +34,7 @@ import axios from 'axios'
         description: description
       }
       //dito ma sasave ng database
-      axios.post('http://localhost:4000/app/signuplocation',data)
+      axios.post('https://likasmanileno-backend.herokuapp.com/app/signuplocation',data)
       .then(res => {
         console.log(res)
         console.log("nice 1")

@@ -15,7 +15,7 @@ const Widget = ({ type }) => {
     const[totalUsers,setTotalUser] = useState([])
     useEffect(() => {
         const fetchPosts = async () => {
-            axios.post('http://localhost:4000/app/getUsers')
+            axios.post('https://likasmanileno-backend.herokuapp.com/app/getUsers')
                 .then(res => {
                     console.log(res);
                     setTotalUser(res.data.length);

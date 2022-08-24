@@ -36,7 +36,7 @@ function Editresident() {
       status:status
     }
     
-    axios.post('http://localhost:4000/app/updateUsers',data)
+    axios.post('https://likasmanileno-backend.herokuapp.com/app/updateUsers',data)
     .then(res => {
       console.log(res)
     }).catch((res) =>{

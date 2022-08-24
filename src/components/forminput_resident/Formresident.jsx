@@ -33,7 +33,7 @@ function Formresident() {
     }
     
     //dito ma sasave ng database
-    axios.post('http://localhost:4000/app/signup',data)
+    axios.post('https://likasmanileno-backend.herokuapp.com/app/signup',data)
     .then(res => {
       console.log(res)
     }).catch((res) =>{
