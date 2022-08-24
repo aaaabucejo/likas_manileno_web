@@ -1,0 +1,33 @@
+.sitedata{
+    height: 600px;
+    padding: 20px;
+
+    .datatableTitle{
+        width: 100%;
+        font-weight: 600;
+        font-size: 24px;
+        color: #000;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .link{
+            text-decoration: none;
+            color: teal;
+            font-size: 16px;
+            font-weight: 400;
+            border: 1px solid teal;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+    }
+
+    button{
+        gap: 5px;
+    }
+
+    
+}

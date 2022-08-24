@@ -1,0 +1,90 @@
+.datatable{
+    height: 600px;
+    padding: 20px;
+
+    .datatableTitle{
+        width: 100%;
+        font-weight: 600;
+        font-size: 24px;
+        color: #000;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .link{
+            text-decoration: none;
+            color: teal;
+            font-size: 16px;
+            font-weight: 400;
+            border: 1px solid teal;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    }
+
+    .cellWithImg{
+        display: flex;
+        align-items: center;
+    }
+
+    .cellImg{
+        width: 32px;
+        height: 32px;
+        border-radius: 20%;
+        object-fit: cover;
+        margin-right: 20px;
+    }
+
+    .cellWithStatus{
+        padding: 5px;
+        border-radius: 5px; 
+        font-weight: 500;
+
+        &.Safe{
+            background-color: rgb(174, 247, 174);
+            color: rgb(15, 128, 15);
+        }
+
+        &.Treating{
+            background-color: rgb(250, 250, 186);
+            color: rgb(199, 199, 6);
+        }
+
+        &.Discharged{
+            background-color: rgb(250, 182, 182);
+            color: rgb(163, 6, 6);
+        }
+    }
+
+    .cellAction{
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        .viewButton{
+            padding: 3px 5px;
+            border-radius: 5px;
+            color: #000;
+            font-weight: 300;
+            font-size: 15px;
+           background-color: rgb(215, 215, 216);
+            cursor: pointer;
+        }
+
+        .deleteButton{
+            padding: 3px 5px;
+            border-radius: 5px;
+            color: #000;
+            font-weight: 300;
+            font-size: 15px;
+            background-color: rgb(215, 215, 216);
+            cursor: pointer;
+        }
+    }
+
+    button{
+        gap: 8px;
+    }
+}

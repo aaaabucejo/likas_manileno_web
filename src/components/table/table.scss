@@ -1,0 +1,19 @@
+.table{
+    
+    .status{
+        padding: 5px;
+        border-radius: 5px;
+
+        &.Safe{
+            color: green;
+        }
+
+        &.Discharged{
+            color: red;
+        }
+
+        &.Treating{
+            color: blue;
+        }
+    }
+}

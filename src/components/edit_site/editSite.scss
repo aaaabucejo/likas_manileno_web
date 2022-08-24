@@ -1,0 +1,54 @@
+.EditSite{
+    padding: 15px;
+    margin: 10px 0px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 20px;
+    
+    .title{
+        width: 100%;
+        font-weight: 500;
+        font-size: 24px;
+        color: #000;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 7pt;
+    }
+
+    .left{
+        display: flex;
+        justify-content: left;
+        padding-bottom: 30px;
+    }
+
+    .indiImg{
+        width: 100px;
+        height: 100px;
+        padding-top: 10px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    button{
+        width: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .actions{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        gap: 15px;
+        display: flex;
+        align-items: center;
+        padding-top: 10%;
+    }
+}
+

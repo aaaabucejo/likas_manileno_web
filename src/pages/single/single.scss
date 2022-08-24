@@ -1,0 +1,99 @@
+.single{
+    display: flex;
+    width: 100%;
+    
+    .singleContainer{
+        flex: 6;
+
+        .top{
+            padding: 20px;
+            display: flex;
+            gap: 20;
+
+
+            .left{
+                flex: 1;
+                -webkit-box-shadow: -1px 6px 15px -6px rgba(0,0,0,0.2); 
+                box-shadow: -1px 6px 15px -6px rgba(0,0,0,0.2);
+                padding: 20px;
+                position: relative;
+
+                .editButton{
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    padding: 5px;
+                    font-size: 12px;
+                    color: rgb(94, 94, 94);
+                    background-color: rgb(212, 212, 212);
+                    border-radius: 0px 0px 0px 5px ;
+                    cursor: pointer;
+
+                }
+
+                .title{
+                    font-size: 20px;
+                    font-weight: 500;
+                    padding-bottom: 10px;
+                }
+
+                .indi{
+                    display: flex;
+                    gap: 20px;
+
+                    .indiImg{
+                        width: 100px;
+                        height: 100px;
+                        padding-top: 10px;
+                        object-fit: cover;
+                    }
+
+                    .details{
+                        .indiTitle{
+                            margin-bottom: 10px;
+                            font-size: 20px;
+                            color: #555;
+
+                        }
+                        .detailIndi{
+                            margin-bottom: 10px;
+                            font-size: 14px;
+
+                            .infoKey{
+                                font-weight: 500;
+                                color: rgb(117, 117, 117);
+                                margin-right: 5px;
+                            }
+
+                            .infoValue{
+                                font-family: 300;
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            .right{
+                flex: 2;
+            }
+        }
+
+    
+        .title{
+        color: rgb(20, 20, 20);
+        font-size: 15px;
+        
+         }
+
+         .bottom{
+        -webkit-box-shadow: -1px 6px 15px -6px rgba(0,0,0,0.2); 
+        box-shadow: -1px 6px 15px -6px rgba(0,0,0,0.2);
+        padding: 20px;
+        margin: 10px 20px;
+        
+          }
+
+    }
+
+}
