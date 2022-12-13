@@ -1,7 +1,38 @@
 import "./navbar.scss"
-import SearchIcon from '@mui/icons-material/Search';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
+import Button from '@mui/material/Button';
+import React,{useEffect,useState} from "react";
+import axios, { Axios } from "axios";
 function Navbar() {
+
+  const [users,setUser] = useState([]);
+  useEffect(() => {
+      const fetchPosts = async () => {
+          axios.post('http://localhost:4000/app/getUsers')
+              .then(res => {
+                  // console.log(res);
+                  setUser(res.data);
+              }).catch(err => {
+                  console.log(err);
+              })
+      };
+      fetchPosts();
+  }, []);
+
+  const[stat,setStat] = useState('Forced');
+  const setForce = () => {
+    //update status
+    const data = {
+      stat:stat
+    }
+    axios.post('http://localhost:4000/app/updataStatus',data)
+    .then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.log(err);
+  })
+  };
+
   return (
     <div className='navbar'>
         <div className="wrapper">
@@ -11,14 +42,16 @@ function Navbar() {
             <div className="items">
                  
                 <div className="item">
-                 <ChatBubbleIcon className="icon"/>
-                 <div className="counter">4</div>
+                <Button onClick={setForce} >
+                 <CrisisAlertIcon className="icon"/>
+                 </Button>
+                 {/* <div className="counter">4</div> */}
                 </div>
 
 
-                <div className="item">
+                {/* <div className="item">
                 <img src="https://media1.popsugar-assets.com/files/thumbor/UwqHyYaJbx0NSt4TrizsLEwVIyI/0x39:2509x2548/fit-in/2048xorig/filters:format_auto-!!-:strip_icc-!!-/2020/04/02/758/n/1922398/69895fd35e861d0df0e390.53702709_/i/Ryan-Reynolds.jpg" alt="" className="avatar" />
-                </div>
+                </div> */}
             </div>
         </div>
     </div>

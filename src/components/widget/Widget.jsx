@@ -5,20 +5,23 @@ import HouseIcon from '@mui/icons-material/House';
 import GroupIcon from '@mui/icons-material/Group';
 import ElderlyIcon from '@mui/icons-material/Elderly';
 import axios from "axios";
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect} from 'react';
 const Widget = ({ type }) => {
+    // let data;
     let data;
+
     //temporary
     // const amount = 50000;
     //function para makuha yung bilang ng nasa table
     const diff = 30;
-    const[totalUsers,setTotalUser] = useState([])
+    // const[totalUsers,setTotalUser] = useState([])
+    const[totaldata,setTotaldata,] = useState([])
     useEffect(() => {
         const fetchPosts = async () => {
-            axios.post('https://likasmanileno-backend.herokuapp.com/app/getUsers')
+            axios.post('http://localhost:4000/app/getUsers')
                 .then(res => {
                     console.log(res);
-                    setTotalUser(res.data.length);
+                    setTotaldata(res.data.length);
                 }).catch(err => {
                     console.log(err);
                 })
@@ -69,9 +72,10 @@ const Widget = ({ type }) => {
     <div className="widget">
         <div className="left">
         <span className="title">{data.title}</span>
-        <span className="counter">{data.isUser} {totalUsers} </span>
+        <span className="counter">{data.isUser} {totaldata} </span>
         <span className="link">{data.link}</span>
         </div>
+        
         <div className="right">
             <div className="percentage positive">
                 <ArrowDropUpIcon/>

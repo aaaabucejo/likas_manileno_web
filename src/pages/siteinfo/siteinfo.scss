@@ -17,6 +17,7 @@
                 box-shadow: -1px 6px 15px -6px rgba(0,0,0,0.2);
                 padding: 20px;
                 position: relative;
+                columns: 2;
 
                 .editButton{
                     position: absolute;
@@ -77,13 +78,10 @@
                 flex: 2;
             }
         }
-
-       
-        
     
         .title{
         color: rgb(0, 0, 0);
-        font-size: 15px;
+        font-size: 25px;
         
          }
 
@@ -92,6 +90,16 @@
         box-shadow: -1px 6px 15px -6px rgba(0,0,0,0.2);
         padding: 20px;
         margin: 10px 20px;
+
+        .evacueeList{
+            flex: 2;
+            padding: 15px;
+            position: relative;
+            columns: 2;
+            max-width:100% ;
+            padding-top: 10pt;
+
+        }
         
           }
      }

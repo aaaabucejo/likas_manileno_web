@@ -1,0 +1,36 @@
+.officialtable{
+    height: 600px;
+    padding: 20px;
+
+    
+        .datatableTitle{
+        width: 100%;
+        font-weight: 600;
+        font-size: 24px;
+        color: #000;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 5pt;  
+
+        .link{
+            text-decoration: none;
+            color: teal;
+            font-size: 16px;
+            font-weight: 400;
+            border: 1px solid teal;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+    }
+    .rowColor{
+        background-color: rgba(211, 211, 211, 0.521);
+        .tableCellName{
+            font-weight: 600;
+        }
+    }
+    
+}

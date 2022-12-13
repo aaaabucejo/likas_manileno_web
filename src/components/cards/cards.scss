@@ -1,0 +1,14 @@
+.cards{
+    padding: 10px;
+    display: flex;
+    width: 98%;
+    
+
+    .cardData{
+        column-count: 4;
+        column-gap: 20pt;
+        flex: 6;
+    
+    }
+   
+}

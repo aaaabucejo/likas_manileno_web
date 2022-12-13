@@ -3,26 +3,33 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import  "./sites.scss";
 import Sitedata from "../../components/datatable_site/Sitedata";
 import React, { useState } from "react";
-import MapSite from "../../components/mapsite/MapSite";
-
+import { useNavigate } from "react-router-dom";
+import Login from "../login/Login"
+import HeatMap from "../../components/heatmap/HeatMap";
 
 
 function Sites() {
-  const [selectPosition, setSelectPosition] = useState(null);
-
-  
+  // const navigate = useNavigate()
+  // if(localStorage.getItem('token') === null){
+  // // navigate('/Login') 
+  // // console.log('no token') 
+  // return (
+  //   <div>
+  //     {(<Login/>)}
+  //   </div>
+  // ) 
+  // }else{
+    // console.log('has token')
   return (
     <div className="sites">
     <Sidebar/>
         <div className="sitesContainer">
             <Navbar/>
-            <div style={{width:'82vw', height:'50vh', padding:'20px 5px 5px 16px'}}>
-            <MapSite selectPosition={selectPosition}/>
-            </div>
             <Sitedata/>
         </div>
     </div>
   )
 }
+// }
 
 export default Sites

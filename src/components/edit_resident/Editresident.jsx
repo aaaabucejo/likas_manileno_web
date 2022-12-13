@@ -9,6 +9,7 @@ import React,{useEffect,useState} from "react";
 import axios from 'axios';
 import { Alert } from "@mui/material";
 import { PopperUnstyled } from "@mui/base";
+import SearchBar from "../searchbar/SearchBar";
 
 
 
@@ -23,7 +24,7 @@ function Editresident() {
   const[lastName,setLastName] = useState("");
   const[contactNo,setContactNo] = useState("");
   const[siteT,setSiteT] = useState("");
-  const[status,setStatus] = useState("");
+  const[age,setAge] = useState("");
  
   
   //update resident function
@@ -33,10 +34,10 @@ function Editresident() {
       lastName:lastName, //input na papalitan aaaa   
       contactNo:contactNo,
       siteT:siteT,
-      status:status
+      age:age
     }
     
-    axios.post('https://likasmanileno-backend.herokuapp.com/app/updateUsers',data)
+    axios.post('http://localhost:4000/app/updateUsers',data)
     .then(res => {
       console.log(res)
     }).catch((res) =>{
@@ -93,8 +94,8 @@ function Editresident() {
     />
      <TextField 
       id="demo-helper-text-misaligned-no-helper" 
-      label="Status" 
-      onChange={(e) => setStatus(e.target.value)}
+      label="Age" 
+      onChange={(e) => setAge(e.target.value)}
     />
      
     </Box>
@@ -115,7 +116,6 @@ function Editresident() {
             </div> */}
         </div>
       </div>
-
     </div>
   )
 }

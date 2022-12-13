@@ -37,7 +37,7 @@ function EditSite() {
         official: official,
         description: description
       }
-    axios.post('https://likasmanileno-backend.herokuapp.com/app/updateLocation',data)
+    axios.post('http://localhost:4000/app/updateLocation',data)
     .then(res => {
       console.log(res)
     }).catch((res) =>{

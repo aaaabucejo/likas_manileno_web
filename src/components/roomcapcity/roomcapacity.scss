@@ -1,0 +1,12 @@
+.roomCapacity{
+    height: 600px;
+    padding: 20px;
+
+    .capacityContainer{
+        flex: 6;
+
+        .roomTabs{
+            width: 100%;
+        }
+    }
+}

@@ -7,6 +7,11 @@ import Hotline from "./pages/hotline/Hotline";
 import Sites from "./pages/sites/Sites";
 import Newsite from "./pages/newsite/Newsite";
 import 'mapbox-gl/dist/mapbox-gl.css';
+import SiteInfo from "./pages/siteinfo/SiteInfo";
+import Editesite from "./pages/EditSite/Editesite";
+import Rooms from "./pages/rooms/Rooms";
+
+
 
 //import axios from 'axios'
 
@@ -15,11 +20,11 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import SiteInfo from "./pages/siteinfo/SiteInfo";
-import EditResident from "./pages/EditResident/EditResident";
-import Editesite from "./pages/EditSite/Editesite";
+import Admin from "./pages/Admin/Admin";
+
 
 function App() {
+  
   return (
     <div className="App">
     <BrowserRouter>
@@ -28,12 +33,13 @@ function App() {
      <Route path="/">
         <Route index element={<Home />}/>
         <Route path="login" element={<Login/>}/> 
+        <Route path="admin" element={<Admin/>}/> 
+
          {/*Routes for Residents*/}
         <Route path="users">
           <Route index element={<List/>}/>
           <Route path="new" element={<New/>}/>
           <Route path="userId" element={<Single/>}/>
-          <Route path="editresident" element={<EditResident/>}/>
         </Route>
          {/*End Routes for Residents*/}
         <Route path="hotline" element={<Hotline/>}/> 
@@ -44,6 +50,8 @@ function App() {
         <Route path="newsite" element={<Newsite/>}/>
         <Route path="siteinfo" element={<SiteInfo/>}/>
         <Route path="editsite" element={<Editesite/>}/>
+        <Route path="rooms" element={<Rooms/>}/>
+
 
         </Route>
          {/*End Routes for Evactuation site  */}

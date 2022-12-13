@@ -1,36 +1,107 @@
 import "./chart.scss"
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { PureComponent, useEffect,useMemo,useState } from 'react';
+import axios from "axios";
+import {
+  ComposedChart,
+  Line,
+  Area,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+import { color } from "@mui/system";
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
-const data = [
-  {name: "January", Total:1200},
-  {name: "Febuary", Total:2100},
-  {name: "March", Total:800},
-  {name: "April", Total:1500},
-  {name: "May", Total:900},
-  {name: "June", Total:1800},
-];
 
-function Chart({aspect, title}) {
-  return (
-    <div className="chart">
-    <div className="title">{title}</div>
-      <ResponsiveContainer width="100%" aspect={aspect} >
-      <AreaChart width={730} height={250} data={data}
-  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-  <defs>
-    <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="5%" stopColor="#0047AB" stopOpacity={0.8}/>
-      <stop offset="95%" stopColor="#0047AB" stopOpacity={0}/>
-    </linearGradient>
+// function TabPanel(props) {
+//   const { children, value, index, ...other } = props;
+// }
 
-  </defs>
-  <XAxis dataKey="name" stroke="gray" />
+function Chart({ title} ) {
+  const [locations,setLocations] = useState([]);
+  useEffect(() => {
+      const fetchPosts = async () => {
+          axios.post('https://likasmanileno-backend.herokuapp.com/app/getlocation')
+              .then(res => {
+                  
+                  setLocations(res.data);
+                  // const total = res.data.filter((tl) => tl.status >= 60);
+                 
+              }).catch(err => {
+                  console.log(err);
+              })
+      };
+      fetchPosts();
+  }, []);
   
-  <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
-  <Tooltip />
-  <Area type="monotone" dataKey="Total" stroke="#8884d8" fillOpacity={1} fill="url(#total)" />
-</AreaChart>
+  // console.log(locations)
+  // locations.map((locations)=>{
+  //   console.log('capacity: '+locations.capacity)
+  //   // console.log('name: '+locations.name)
+  //   if(locations.capacity == 500){
+  //     console.log('500')
+  //   }
+  // })
+  
+
+
+
+//get color
+  const newArr = []
+  locations.map((locations)=>{  
+      if(locations.capacity == 500){
+        // console.log(locations.capacity)
+        newArr.push({name:locations.name,capacity:locations.capacity,fill:'#FF0000'})
+      }else if(locations.capacity == 400){
+        //moderate
+        newArr.push({name:locations.name,capacity:locations.capacity,fill:'#ffff27'})
+      }else if(locations.capacity == 220){
+        //available
+        newArr.push({name:locations.name,capacity:locations.capacity,fill:'#00cc00'})
+      }   
+      
+  }) 
+
+
+
+  
+ return (
+    <div className="chart">
+  
+    <div className="chartContainer">
+    <ResponsiveContainer width="100%" height="170%">
+    {/* {users.map(res => ( */}
+        <ComposedChart
+          layout="vertical"
+          width={500}
+          height={400}
+          data={newArr}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 50,
+          }}
+        >
+          <CartesianGrid stroke="#808080" />
+          <XAxis type="number" />
+          <YAxis dataKey="name" type="category" scale="band" />
+          
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="capacity" barSize={30} fill="fill" />        
+        </ComposedChart>
+        {/* ))} */}
       </ResponsiveContainer>
+      </div>
     </div>
   )
 }

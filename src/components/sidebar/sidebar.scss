@@ -23,8 +23,10 @@
 
         ul{
             list-style: none;
-            margin: 0;
-            padding: 0;
+            margin: 5px;
+            padding: 10px;
+            padding-top: 40pt;
+
         }
 
         li{
@@ -34,7 +36,7 @@
             cursor: pointer;
 
             &:hover{
-                background-color: #ece8ff;
+                background-color: #dfdfdf;
             }
 
             .icons{

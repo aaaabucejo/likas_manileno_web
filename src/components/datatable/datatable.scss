@@ -7,6 +7,7 @@
         font-weight: 600;
         font-size: 24px;
         color: #000;
+        padding-top: 15pt;
         margin-bottom: 10px;
         display: flex;
         align-items: center;
@@ -20,6 +21,7 @@
             border: 1px solid teal;
             padding: 5px;
             border-radius: 5px;
+            background-color: #fff;
             cursor: pointer;
         }
     }
@@ -87,4 +89,13 @@
     button{
         gap: 8px;
     }
+
+    .rowColor{
+        background-color: rgba(211, 211, 211, 0.521);
+        .tableCellName{
+            font-weight: 600;
+        }
+    }
+
+   
 }

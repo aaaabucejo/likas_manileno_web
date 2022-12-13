@@ -1,16 +1,28 @@
 .chart{
-    flex: 4;
     -webkit-box-shadow: -1px 6px 15px -6px rgba(0,0,0,0.2); 
     box-shadow: -1px 6px 15px -6px rgba(0,0,0,0.2);
-    padding: 10px;
     color: rgb(102, 102, 102);
+    min-height: 60vh;
+    display: flex;
+    width: 100%;
+    padding: 20px;
 
-    .title{
-        font-weight: 500;
-        margin-bottom: 20px;
+
+    .chartContainer{
+        flex: 6;
+
+
+        .title{
+            font-weight: 500;
+            margin-bottom: 20px;
+            flex: 6;
+        }
+    
+        .chartGrid{
+            stroke: rgb(235, 235, 235);
+            width:120%;
+        }
     }
 
-    .chartGrid{
-        stroke: rgb(235, 235, 235);
-    }
+  
 }
