@@ -1,30 +1,46 @@
-const nodemailer = require("nodemailer")
+import axios from "axios";
+import React,{useEffect,useState, usePerams, useStyles} from "react";
+import {Link} from 'react-router-dom';
 
-module.exports = async (email, subject, text) => {
+export default function EmailVerification(){
+    let{ email } = usePerams();
+    let{ token } = usePerams();
+    const {isValidToken, setIsValidToken} = useState(false);
+    const classes = useStyles();
 
-    try {
-        const transporter = nodemailer.createTransport({
-            host:process.env.HOST,
-            service:process.env.SERVICE,
-            port:Number(process.env.EMAIL_PORT),
-            secure: Boolean(process.env.SECURE),
-            auth:{
-                email: process.env.email,
-                passWord: pass.env.passWord,
+    function verifyEmailToken(email, emailToken){
+        console.log('testing function')
+        const emailAndToken = {
+            email: email,
+            emailToken: emailToken,
+        }
+        axios.post("http://localhost:4000/app/verifyEmailToken", emailAndToken)
+        .then(response =>{
+            const responseStatus = response.data.status;
+            if(responseStatus == 'okay'){
+                setIsValidToken(true);
             }
-        });
-
-        await transporter.serndMail({
-            from:process.env.USER,
-            to: email,
-            subject: subject,
-            text: text,
         })
+    };
 
-        console.log("Email Verification Sent");
+    useEffect(()=>{
+        verifyEmailToken(email, token);
+    },[])
 
-    } catch (error) {
-        console.log("Email Not Sent")
-        console.log(error)
-    }
+    return(
+        <div>
+            {isValidToken ?
+                <div className={classes.header}>
+                    Email has been verified you now sign in
+                    <Link href='../../Logn'>
+                        Login
+                    </Link>
+                </div>    
+                :
+                <div className={classes.header}>
+                    Could not verify Email or token is no longer Valid
+                </div>
+        }
+        </div>
+    )
 }

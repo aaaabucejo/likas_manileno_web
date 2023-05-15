@@ -10,17 +10,17 @@ import Geocode from "../../components/geocode/Geocode";
 
 
   const Hotline = () => {
-    // const navigate = useNavigate()
-    // if(localStorage.getItem('token') === null){
+    const navigate = useNavigate()
+    if(localStorage.getItem('token') === null){
     // navigate('/Login') 
-    // // console.log('no token') 
-    // return (
-    //   <div>
-    //     {(<Login />)}
-    //   </div>
-    // ) 
-    // }else{
-      // console.log('has token')
+    // console.log('no token') 
+    return (
+      <div>
+        {(<Login />)}
+      </div>
+    ) 
+    }else{
+      console.log('has token')
   return (
     <div className="hotline">
         <Sidebar/>
@@ -31,7 +31,7 @@ import Geocode from "../../components/geocode/Geocode";
         </div>
     </div>
   )
-// }
+}
   
 }
 export default Hotline

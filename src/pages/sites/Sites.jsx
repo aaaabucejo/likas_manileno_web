@@ -9,16 +9,16 @@ import HeatMap from "../../components/heatmap/HeatMap";
 
 
 function Sites() {
-  // const navigate = useNavigate()
-  // if(localStorage.getItem('token') === null){
-  // // navigate('/Login') 
-  // // console.log('no token') 
-  // return (
-  //   <div>
-  //     {(<Login/>)}
-  //   </div>
-  // ) 
-  // }else{
+  const navigate = useNavigate()
+  if(localStorage.getItem('token') === null){
+  // navigate('/Login') 
+  // console.log('no token') 
+  return (
+    <div>
+      {(<Login/>)}
+    </div>
+  ) 
+  }else{
     // console.log('has token')
   return (
     <div className="sites">
@@ -30,6 +30,6 @@ function Sites() {
     </div>
   )
 }
-// }
+}
 
 export default Sites

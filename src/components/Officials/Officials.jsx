@@ -25,72 +25,6 @@ import MuiAlert from '@mui/material/Alert';
 
 
 
-const columns = [
-    { field: 'id', 
-    headerName: 'ID', 
-    width: 60 
-    },
-
-    { field: 'firstName', 
-    headerName: 'First name',
-    width: 170 
-    },
-
-    { field: 'lastName',
-     headerName: 'Last name',
-      width: 170 },
-    {
-      field: 'address',
-      headerName: 'Address',
-      width: 210,
-    },
-
-    { 
-    field: 'email', 
-    headerName: 'Email', 
-    width: 200 
-    },
-
-    {
-    field: 'contact',
-    headerName: 'Contact#',
-    width:'130',
-    },
-
-    {
-    field: 'age',
-    headerName: 'Age',
-    width:'100',
-    },
-
-    {
-    field: 'action',
-    headerName: 'Action',
-    width:'160',
-    },
-    
-
-   
-  ];
-  
-  // const rows = [
-  //   { id: 1, lastName: 'Dela Cruz', firstName: 'Juan', address:'Sampaloc Manila', email:'sample@gmail.com', contact:'0999999999', age: 35, },
-  //   { id: 2, lastName: 'Dela Cruz', firstName: 'Juan', address:'Sampaloc Manila', email:'sample@gmail.com', contact:'0999999999', age: 35 },
-  //   { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  //   { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  //   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  //   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  //   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  //   { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  //   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  //   { id: 10, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  //   { id: 11, lastName: 'Dela Cruz', firstName: 'Juan', address:'Sampaloc Manila', email:'sample@gmail.com', contact:'0999999999', age: 35,  },
-
-    
-
-  // ];
-
-
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -106,6 +40,7 @@ function Officials() {
   const[contact,setContact] = useState("");
   const[age,setAge] = useState("");
   const [Dialogopen, setDialogOpen] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
   
    // Snackbar
    const [openSnack, setOpenSnack] = React.useState(false);
@@ -113,6 +48,8 @@ function Officials() {
    const handleAddSnack = () => {
      setOpenSnack(true);
    };
+
+   
  
    const handleCloseSnack = (event, reason) => {
      if (reason === 'clickaway') {
@@ -177,6 +114,8 @@ function Officials() {
     })
   }
 
+
+
   const openDelete = () => {
     setDialogOpen(true);
   };
@@ -185,22 +124,47 @@ function Officials() {
     setDialogOpen(false);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  const handleEditOpen = () => {
+    setOpenEdit(true);
+  };
+
+  const handleEditCancel = () =>{
+    setOpenEdit(false);
+  }
+
+  const handleEditClose = () => {
+    const data = {
+      firstName:firstName,
+      lastName: lastName,
+      email:email,
+      contact:contact
+    }
+    console.log(data)
+    axios.post('http://localhost:4000/app/updateofficials',data)
+    .then(res => {
+      console.log(res)
+      // setOpenEditHotline(false);
+    }).catch((res) =>{
+      console.log(res)
+    })
+ 
+  };
+
+  
 
   return (
     <div className='officialtable'>
     <div className='datatableTitle'>
     Officials
-    <Button onClick={handleClickOpen}   startIcon={<AddIcon/>} variant="contained" disableElevation> 
+    {/* <Button onClick={handleClickOpen}   startIcon={<AddIcon/>} variant="contained" disableElevation> 
       Add Admin
-      </Button>
+      </Button> */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle style={{fontWeight: 500,}}>ADD ADMIN ACCOUNT </DialogTitle>
         <DialogContent>
@@ -310,10 +274,10 @@ function Officials() {
       <TableHead>
         <TableRow className="rowColor">
           {/* <TableCell className="tableCell">ID No.</TableCell> */}
-          <TableCell className="tableCellName" align="center">First Name</TableCell>
-          <TableCell className="tableCellName" align="center">Last Name</TableCell>
-          {/* <TableCell className="tableCellName">Address</TableCell> */}
           <TableCell className="tableCellName" align="center">Email</TableCell>
+          <TableCell className="tableCellName" align="center">First Name</TableCell>
+          {/* <TableCell className="tableCellName">Address</TableCell> */}
+          <TableCell className="tableCellName" align="center">Last Name</TableCell>
           <TableCell className="tableCellName" align="center">Contact#</TableCell>
           <TableCell className="tableCellName" align="center">Actions</TableCell>
         </TableRow>
@@ -322,14 +286,14 @@ function Officials() {
         {users.map(res => (
           <TableRow key={res.id}>
             {/* <TableCell>{res._id}</TableCell> */}
-            <TableCell className="tableCell" align="center">{res.firstName}</TableCell>
-            <TableCell  className="tableCell" align="center">{res.lastName}</TableCell>
+            <TableCell className="tableCell" align="center">{res.email}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.firstName}</TableCell>
             {/* <TableCell  className="tableCell">{res.address}</TableCell> */}
-            <TableCell  className="tableCell" align="center">{res.email}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.lastName}</TableCell>
             <TableCell  className="tableCell" align="center">{res.contact}</TableCell>
             <TableCell  className="tableCell" align="center"><span className={`status ${res.status}`}>{res.status}</span>
-            <button>Edit</button>
-            <button onClick={openDelete}>Delete</button>
+            <Button variant="contained" size="small"   onClick={handleEditOpen}>Edit</Button>
+            <Button size="small" variant="contained" color="error" onClick={openDelete}>Delete</Button>
             <Dialog
               open={Dialogopen}
               onClose={closeDelete}
@@ -351,6 +315,50 @@ function Officials() {
               </DialogActions>
             </Dialog>
             </TableCell>
+            <Dialog open={openEdit} onClose={handleEditClose}>
+              <DialogTitle>Edit Hotline</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                 Fill out the fields you wish to change.
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="firstname"
+                  label="First Name"
+                  fullWidth
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="lastname"
+                  label="Last Name"
+                  fullWidth
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="email"
+                  label="Email"
+                  fullWidth
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="contact"
+                  label="Contact"
+                  fullWidth
+                  onChange={(e) => setContact(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" onClick={handleEditCancel}>Cancel</Button>
+                <Button variant="outlined" onClick={()=>handleEditClose(email)}>Submit</Button>
+              </DialogActions>
+            </Dialog>
           </TableRow>
         ))}
       </TableBody>

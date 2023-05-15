@@ -18,28 +18,29 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import axios, { Axios } from "axios";
+import {useEffect,useState} from "react";
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-function createData(name, number, area,) {
-  return { name, number, area,};
-}
+// function createData(name, number, area,) {
+//   return { name, number, area,};
+// }
 
-const rows = [
-  createData('Emergency 911 National Office','(02) 925-9111', "NCR", ),
-  createData('Bureau of Fire Protection', "(02) 426-0219", "NCR", ),
-  createData('Philippine National Police', '(2) 722-0650', "NCR",),
-  createData('Philippine Coast Guard', '(02) 527-8481',"NCR",),
-  createData('Philippine Coast Guard', '(02) 527-8481',"NCR",),
-  createData('Manila Traffic Hotline', '(02)527-3088',"NCR",),
-  createData('Department of Transportation', '7890',"NCR",),
-  createData('Department of Social Welfare and Development', '(02) 931-81-01',"NCR",),
-  createData('Office forTransportation Security', '(02) 853-5249',"NCR",),
-  createData('Civil Aviation Authority of the Philippines', '(02) 879-9112',"NCR",),
+// const rows = [
+//   createData('Emergency 911 National Office','(02) 925-9111', "NCR", ),
+//   createData('Bureau of Fire Protection', "(02) 426-0219", "NCR", ),
+//   createData('Philippine National Police', '(2) 722-0650', "NCR",),
+//   createData('Philippine Coast Guard', '(02) 527-8481',"NCR",),
+//   createData('Philippine Coast Guard', '(02) 527-8481',"NCR",),
+//   createData('Manila Traffic Hotline', '(02)527-3088',"NCR",),
+//   createData('Department of Transportation', '7890',"NCR",),
+//   createData('Department of Social Welfare and Development', '(02) 931-81-01',"NCR",),
+//   createData('Office forTransportation Security', '(02) 853-5249',"NCR",),
+//   createData('Civil Aviation Authority of the Philippines', '(02) 879-9112',"NCR",),
 
 
-];
+// ];
 
 
 
@@ -49,12 +50,75 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 function Hotlinetable() {
 
+  // edit hotline form
+  const [openEditHotline, setOpenEditHotline] = React.useState(false);
+
+  const handleEditOpen = () => {
+    setOpenEditHotline(true);
+  };
+
+  const [Dialogopen, setDialogOpen] = React.useState(false);
+
+  const handleEditClose = () => {
+    
+    const data = {
+      agency: agency,
+      directline: directline,
+      area:area
+    }
+   
+    axios.post('http://localhost:4000/app/updatehotline',data)
+    .then(res => {
+      console.log(res)
+      setOpenEditHotline(false);
+    }).catch((res) =>{
+      console.log(res)
+    })
+ 
+  };
+
+  const handleEditCancel = () =>{
+    setOpenEditHotline(false);
+  }
+
+
+
 // snackbar
   const [openSnack, setOpenSnack] = React.useState(false);
+  const[agency,setAgency] = useState("");
+  const[directline,setDirectline] = useState("");
+  const[area,setArea] = useState("");
+
 
   const handleAddSnack = () => {
-    setOpenSnack(true);
+    const data = {
+      agency: agency,
+      directline: directline,
+      area: area
+    }
+    axios.post('http://localhost:4000/app/signuphotline',data)
+    .then(res => {
+      console.log(res)
+      // setOpen(false);
+        setOpenSnack(true);
+    }).catch((res) =>{
+      console.log(res)
+    })
   };
+
+  const [hotline,setHotline] = useState([]);
+  useEffect(() => {
+      const fetchPosts = async () => {
+          axios.post('http://localhost:4000/app/gethotline')
+              .then(res => {
+                  // console.log(res);
+                  setHotline(res.data);
+              }).catch(err => {
+                  console.log(err);
+              })
+      };
+      fetchPosts();
+  }, []);
 
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
@@ -65,20 +129,24 @@ function Hotlinetable() {
   };
   // snackbar
 
+  const deletehotline=(directline) =>{
 
-  function handleButton(){
-    //pag pinindot ko yung submit
-  
+    const data = {
+      directline:directline      
+    }
+    console.log(data)
     
-    //dito ma sasave ng database
-    axios.post('http://localhost:4000/app/signup')
+    axios.post('http://localhost:4000/app/deletehotline',data)
     .then(res => {
-      console.log(res)
-      setOpen(false);
+      if(res.data != null){
+      }
+      console.log('deleted successful')
     }).catch((res) =>{
       console.log(res)
     })
+  
   }
+
 
   const [open, setOpen] = React.useState(false);
 
@@ -88,6 +156,14 @@ function Hotlinetable() {
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const openDelete = () => {
+    setDialogOpen(true);
+  };
+
+  const closeDelete = () => {
+    setDialogOpen(false);
   };
   
   return (
@@ -109,6 +185,7 @@ function Hotlinetable() {
             id="agencyName"
             label="Agency Name"
             fullWidth
+            onChange={(e) => setAgency(e.target.value)}
           />
            <TextField
             autoFocus
@@ -116,6 +193,7 @@ function Hotlinetable() {
             id="contactNumber"
             label="Contact#"
             fullWidth
+            onChange={(e) => setDirectline(e.target.value)}
           />
           <TextField
             autoFocus
@@ -123,6 +201,7 @@ function Hotlinetable() {
             id="area"
             label="Area"
             fullWidth
+            onChange={(e) => setArea(e.target.value)}
           />
           
         
@@ -155,20 +234,81 @@ function Hotlinetable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {hotline.map((res) => (
             <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              // key={row.name}
+              // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row"> {row.name} </TableCell>
-              <TableCell align="center">{row.number}</TableCell>
-              <TableCell align="center">{row.area}</TableCell>
+              <TableCell component="th" scope="row"> {res.agency} </TableCell>
+              <TableCell align="center">{res.directline}</TableCell>
+              <TableCell align="center">{res.area}</TableCell>
               <TableCell align="center">
-              <button>Edit</button>
-              <button>Delete</button>
-              </TableCell>
-            
+              <Button variant="contained" size="small"   onClick={handleEditOpen}>Edit</Button>
+              <Button size="small" variant="contained" color="error" onClick={openDelete}>Delete</Button>
+              {/* <Button  variant="contained" size="small" color="error" onClick={() =>deletehotline(res.directline)}>Delete</Button> */}
+              <Dialog
+              open={Dialogopen}
+              onClose={closeDelete}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Delete this user?"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                 Are you sure do you want to delete this? 
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={closeDelete}>Cancel</Button>
+                {/* <Button onClick={closeDelete} autoFocus> */}
+                <Button onClick={() =>deletehotline(res.directline)}>Delete</Button>         
+              </DialogActions>
+            </Dialog>
+             </TableCell>
+
+
+              {/* Edit forms */}
+              <Dialog open={openEditHotline} onClose={handleEditClose}>
+              <DialogTitle>Edit Hotline</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                 Fill out the fields you wish to change.
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="EditAgencyName"
+                  label="Agency Name"
+                  fullWidth
+                  onChange={(e) => setAgency(e.target.value)}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="EditContactNumber"
+                  label="Contact#"
+                  fullWidth
+                  onChange={(e) => setDirectline(e.target.value)}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="EditArea"
+                  label="Area"
+                  fullWidth
+                  onChange={(e) => setArea(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" onClick={handleEditCancel}>Cancel</Button>
+                <Button variant="outlined" onClick={()=>handleEditClose(directline)}>Submit</Button>
+              </DialogActions>
+            </Dialog>
+             {/* Edit forms */}
             </TableRow>
+            
           ))}
         </TableBody>
       </Table>

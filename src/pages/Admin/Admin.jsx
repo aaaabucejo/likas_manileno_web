@@ -11,16 +11,16 @@ function Admin() {
   const [selectPosition, setSelectPosition] = useState(null);
 
 
-  // const navigate = useNavigate()
-  // if(localStorage.getItem('token') === null){
-  // // navigate('/Login') 
-  // // console.log('no token') 
-  // return (
-  //   <div>
-  //     {(<Login/>)}
-  //   </div>
-  // ) 
-  // }else{
+  const navigate = useNavigate()
+  if(localStorage.getItem('token') === null){
+  // navigate('/Login') 
+  // console.log('no token') 
+  return (
+    <div>
+      {(<Login/>)}
+    </div>
+  ) 
+  }else{
   return (
     <div className="admin">
         <Sidebar/>
@@ -31,5 +31,5 @@ function Admin() {
     </div>
   )
 }
-// }
+}
 export default Admin

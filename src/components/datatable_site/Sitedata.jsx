@@ -1,6 +1,6 @@
 import './sitedata.scss';
 // import * as React from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import React,{useEffect,useState, useRef} from "react";
 import axios from "axios";
 import Table from '@mui/material/Table';
@@ -68,6 +68,32 @@ const params = {
 
 function Sitedata(props) {
 
+
+ const navigate = useNavigate();
+
+ 
+
+  const handleViewClick = (_id,name,address,totalevac,capacity,room,restroom,kitchen,flood,groundrupture) => {
+   
+    //change the data name from "name" to "newName"
+    // navigate('/sites/siteinfo', { state: { name } });
+    navigate('/sites/siteinfo', { state: { 
+      _id:_id,
+      name:name,
+      address:address,
+      totalevac:totalevac,
+      capacity:capacity,
+      room:room,
+      restroom:restroom,
+      kitchen:kitchen,
+      flood:flood,
+      groundrupture:groundrupture
+
+    } });
+
+  };
+
+
   //snackbar
   const [openSnack, setOpenSnack] = React.useState(false);
 
@@ -92,9 +118,9 @@ function Sitedata(props) {
     const[address,setAddress] = useState("");
     const[latitude,setLatitude]=useState("");
     const[longtitude,setLongtitude]=useState("");
-    const[totalevac,setTotalEvac]=useState("");
-    const[capacity,setCapacity] = useState("");
-    const[room,setRoom] = useState("");
+    const[totalevac,setTotalEvac]=useState('0');
+    const[capacity,setCapacity] = useState('0');
+    const[room,setRoom] = useState('0');
     const[restroom,setRestRoom] = useState("");
     const[kitchen,setKitchen] = useState("");
     const[flood,setFlood] = useState("");
@@ -104,39 +130,92 @@ function Sitedata(props) {
     const [locations,setLocations] = useState([]);
     const [users,setUser] = useState([]);
 
-      //get data locations
-      useEffect(() => {
-        const fetchPosts = async () => {
-          axios.post('http://localhost:4000/app/getlocation')
-              .then(res => {
-                  setLocations(res.data); 
-              }).catch(err => {
+    
+          // 2 axios
+          useEffect(() => {
+            const fetchPosts = async () => {
+              axios.post('http://localhost:4000/app/getLocation')
+                .then(resloc => {
+                  setLocations(resloc.data);
+                  axios.post('http://localhost:4000/app/getUsers')
+                    .then(resusers => {
+                      setUser(resusers.data)
+                      //add axios.post here getRooms
+                      axios.post('http://localhost:4000/app/getRooms')
+                      .then(resrooms => {
+                        // setRoom(resrooms.data);
+                        // Process the rooms data as needed
+                        const capCounter = [];
+                        const roomCounter = [];
+                        if(resloc.data.length > 0){
+                          resloc.data.forEach(loc => {
+                            let totalCapacity = 0; // Initialize totalCapacity to 0 for each location
+                            let totalRoom = 0;
+                            resrooms.data.forEach(room => {
+                              if(room.name == loc.name){
+                              totalCapacity += parseInt(room.capacity, 10);
+                              totalRoom++;    
+                              }
+                            });
+                            capCounter.push({ name: loc.name, capacity:totalCapacity }); 
+                            roomCounter.push({ name: loc.name, room: totalRoom });
+                          });
+                        }
+                        // console.log(capCounter)
+                        // console.log(roomCounter)
+                        for(let i = 0; i < capCounter.length; i++){
+                          axios.post('http://localhost:4000/app/updateLocationCapacity',capCounter[i])
+                          .then(rescap=>{
+                            // console.log(rescap)
+                          });
+                        }
+                        for(let i = 0; i < capCounter.length; i++){
+                        axios.post('http://localhost:4000/app/updateRoomCount', roomCounter[i])
+                          .then(resroom => {
+
+                          });
+                        }
+                         })
+                         
+                        .catch(err => {
+                          console.log(err);
+                       });
+                      // console.log(resloc.data)
+                      // console.log(resusers.data)
+                      const newArr = []
+                      if (resloc.data.length > 0) {
+                        // console.log(resloc.data.length)            
+                        for (let i = 0; i < resloc.data.length; i++) {
+                        const getCap = resusers.data.filter((tl)=>tl.name == resloc.data[i].name).length
+                        newArr.push({name:resloc.data[i].name,totalevac:getCap})  
+                        // console.log(newArr)                          
+                        } 
+                        for (let i = 0; i < newArr.length; i++) {
+                          axios.post('http://localhost:4000/app/updateLocationTotal',newArr[i])
+                             .then(restotal =>{
+                            // console.log(rescap)
+                            // console.log(resloc.data)
+                          }).catch(err =>{
+                            console.log(err)
+                          })
+                        }
+                      }
+                    })
+                    .catch(err => {
+                      console.log(err);
+                    });
+                })
+                .catch(err => {
                   console.log(err);
-              })
+                });
             };
             fetchPosts();
           }, []);
-    //get data users
-      useEffect(() => {
-        const fetchPosts = async () => {
-            axios.post('http://localhost:4000/app/getUsers')
-              .then(res => {
-              // console.log(res);
-                  setUser(res.data);
-              }).catch(err => {
-                  console.log(err);
-              })
-              };
-              fetchPosts();
-          }, []);
 
-
-          //users.siteT == locations.name
           
-          //  => insert sa totalEvac
 
-          // show total count
-
+                        
+        
 
     //pag pinindot ko yung submit
     function handleButton(){ 
@@ -145,6 +224,7 @@ function Sitedata(props) {
         address: address,
         latitude: latitude,
         longtitude: longtitude,
+        totalevac: totalevac,
         capacity: capacity,
         room: room,
         restroom: restroom,
@@ -152,6 +232,7 @@ function Sitedata(props) {
         flood: flood,
         groundrupture: groundrupture
       }
+      // console.log(data)
       //dito ma sasave ng database
       axios.post('http://localhost:4000/app/signuplocation',data)
       .then(res => {
@@ -166,12 +247,13 @@ function Sitedata(props) {
   // modal function
   const [open, setOpen] = React.useState(false);
   
-  function View(latitude,longtitude){
+  function View(latitude,longtitude,error){
     const data = {
       latitude,
       longtitude
     }
    map.setView(data)
+   
     
   }
 
@@ -191,19 +273,13 @@ function Sitedata(props) {
     setOpen(false);
   };
 
-  // void countTotalEvac(){
-  //   users
-  // };
-
   
-
-  //get address 
   const deleteAdd=(address) =>{
     const data = {
       address:address           
     }
     
-    //console.log(data)
+    // console.log(data)
     axios.post('http://localhost:4000/app/deletelocation',data)
     .then(res => {
       if(res.data != null){
@@ -341,7 +417,7 @@ function Sitedata(props) {
             value={address}
             fullWidth
             />
-          <TextField
+          {/* <TextField
             autoFocus
             margin="dense"
             id="latitude"
@@ -361,10 +437,10 @@ function Sitedata(props) {
             value={longtitude}
             
             style={{paddingBottom:"6pt"}}
-          />
+          /> */}
         </div>
         
-          <TextField
+          {/* <TextField
             autoFocus
             margin="dense"
             id="capacity"
@@ -372,9 +448,9 @@ function Sitedata(props) {
             type="number"
             Width='15'
             onChange={(e) => setCapacity(e.target.value)}
-          />
+          /> */}
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-             <TextField
+             {/* <TextField
             autoFocus
             margin="dense"
             id="rooms"
@@ -382,7 +458,7 @@ function Sitedata(props) {
             type="number"
             Width='15'
             onChange={(e) => setRoom(e.target.value)}
-          />
+          /> */}
             <TextField
             autoFocus
             margin="dense"
@@ -440,7 +516,7 @@ function Sitedata(props) {
         <Stack  direction="row" spacing={2}>
         <Button onClick={handleClose} variant="contained">Cancel</Button>
       {/* <Button onClick={handleButton}  variant="outlined">Add</Button>      */}
-       <Button onClick={handleAddSnack}  variant="outlined">Add</Button>
+       <Button onClick={handleButton}  variant="outlined">Add</Button>
       <Snackbar open={openSnack} autoHideDuration={4000} onClose={handleCloseSnack}>
         <Alert onClose={handleCloseSnack} severity="success" sx={{ width: '100%' }}>
           Evacuation Site Added
@@ -451,37 +527,52 @@ function Sitedata(props) {
         </DialogActions>
       </Dialog>
     </div>
-    
+    {/* test */}
+    {/* <div>
+      <form onSubmit={handleSubmit}>
+        <label>
+         table
+         <TableCell className="tableCell">hello</TableCell>
+        </label>
+        <button type="submit">Submit</button>
+      </form>
+      {submitted && <Navigate to={{
+      pathname: `/sites/siteinfo/${inputValue}`,
+      state: { tableData: tableData }
+    }} />}
+    </div> */}
+
     <TableContainer component={Paper} className="table">
-    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-      <TableHead>
-        <TableRow className="rowColor">
+    <Table sx={{ minWidth: 650 }} aria-label="simple table" style={{alignItems:"center"}}>
+      <TableHead >
+      <TableRow className="rowColor" >
           {/* <TableCell className="tableCell">ID No.</TableCell> */}
-          <TableCell className="tableCellName">Name</TableCell>
-          <TableCell className="tableCellName">Address</TableCell>
-          <TableCell className="tableCellName">Residents</TableCell>
-          <TableCell className="tableCellName">Capacity</TableCell>
-          <TableCell className="tableCellName">Rooms</TableCell>
-          <TableCell className="tableCellName">Restrooms</TableCell>
-          <TableCell className="tableCellName">Kitchen</TableCell>
-          <TableCell className="tableCellName">Flood</TableCell>
-          <TableCell className="tableCellName">Ground Rupture</TableCell>
-          <TableCell className="tableCellName">Action</TableCell>
+          <TableCell className="tableCellName" align="center">Name</TableCell>
+          <TableCell className="tableCellName" align="center">Address</TableCell>
+          <TableCell className="tableCellName" align="center">Residents</TableCell>
+          <TableCell className="tableCellName" align="center">Capacity</TableCell>
+          <TableCell className="tableCellName" align="center">Rooms</TableCell>
+          <TableCell className="tableCellName" align="center">Restrooms</TableCell>
+          <TableCell className="tableCellName" align="center" >Kitchen</TableCell>
+          <TableCell className="tableCellName" align="center">Flood</TableCell>
+          <TableCell className="tableCellName" align="center">Ground Rupture</TableCell>
+          <TableCell className="tableCellName" align="center">Action</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {locations.map(res => (
           <TableRow key={res.id}>
             {/* <TableCell>{res._id}</TableCell> */}
-            <TableCell className="tableCell">{res.name}</TableCell>
-            <TableCell className="tableCell">{res.address}</TableCell>
-            <TableCell className="tableCell">{res.totalevac}</TableCell>
-            <TableCell  className="tableCell">{res.capacity}</TableCell>
-            <TableCell  className="tableCell">{res.room}</TableCell>
-            <TableCell  className="tableCell">{res.restroom}</TableCell>
-            <TableCell  className="tableCell">{res.kitchen}</TableCell>
-            <TableCell  className="tableCell">{res.flood}</TableCell>
-            <TableCell  className="tableCell">{res.groundrupture}</TableCell>
+            <TableCell className="tableCell" align="center">{res.name}</TableCell>
+            {/* <TableCell className="tableCell">{getCap(res.name)}{res.name}</TableCell> */}
+            <TableCell className="tableCell" align="center">{res.address}</TableCell>
+            <TableCell className="tableCell" align="center">{res.totalevac == 0 ? 'No Evacuee' : res.totalevac}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.capacity}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.room}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.restroom}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.kitchen}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.flood}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.groundrupture}</TableCell>
             
             
             {/* <TableCell  className="tableCell">{res.username}</TableCell>
@@ -489,10 +580,21 @@ function Sitedata(props) {
            
             <TableCell className="tableCell">
             {/* <Link to="/sites/siteinfo" style={{textDecoration:"none"}}>
-            <button>View</button>
+               <Button variant="contained" size='small'>View</Button>
             </Link> */}
-            <button onClick={() =>View(res.latitude,res.longtitude)}>view</button>
-            <button onClick={openDelete}>Delete</button>
+            <Button variant="contained" size='small' onClick={() => handleViewClick(
+              res._id,
+              res.name,
+              res.address,
+              res.totalevac,
+              res.capacity,
+              res.room,
+              res.restroom,
+              res.kitchen,
+              res.flood,
+              res.groundrupture,
+              )}>View</Button>
+            <Button size="small" variant="contained" color="error" onClick={openDelete}>Delete</Button>
             <Dialog
               open={Dialogopen}
               onClose={closeDelete}
@@ -508,8 +610,10 @@ function Sitedata(props) {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
+
                 <Button onClick={closeDelete}>Cancel</Button>
                 {/* <Button onClick={closeDelete} autoFocus> */}
+                
                 <Button onClick={() =>deleteAdd(res.address)} autoFocus>Delete</Button>           
               </DialogActions>
             </Dialog>

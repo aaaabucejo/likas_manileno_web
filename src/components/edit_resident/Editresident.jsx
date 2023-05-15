@@ -31,7 +31,7 @@ function Editresident() {
   function UpdateUser(){
     const data = {
       firstName: firstName,//key value
-      lastName:lastName, //input na papalitan aaaa   
+      lastName:lastName, //input na papalitan 
       contactNo:contactNo,
       siteT:siteT,
       age:age

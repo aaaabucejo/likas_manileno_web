@@ -29,7 +29,7 @@ function Chart({ title} ) {
   const [locations,setLocations] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('https://likasmanileno-backend.herokuapp.com/app/getlocation')
+          axios.post('http://localhost:4000/app/getlocation')
               .then(res => {
                   
                   setLocations(res.data);
@@ -57,16 +57,17 @@ function Chart({ title} ) {
 //get color
   const newArr = []
   locations.map((locations)=>{  
-      if(locations.capacity == 500){
+      if((locations.totalevac/locations.capacity)>= 0.7){
         // console.log(locations.capacity)
-        newArr.push({name:locations.name,capacity:locations.capacity,fill:'#FF0000'})
-      }else if(locations.capacity == 400){
+        newArr.push({name:locations.name,totalevac:locations.totalevac,fill:'#FF0000'})
+      }else if((locations.totalevac/locations.capacity)<0.7 && (locations.totalevac/locations.capacity)>= 0.5){
         //moderate
-        newArr.push({name:locations.name,capacity:locations.capacity,fill:'#ffff27'})
-      }else if(locations.capacity == 220){
+        newArr.push({name:locations.name,totalevac:locations.totalevac,fill:'#ffff27'})
+      }else if((locations.totalevac/locations.capacity)< 0.5){
         //available
-        newArr.push({name:locations.name,capacity:locations.capacity,fill:'#00cc00'})
+        newArr.push({name:locations.name,totalevac:locations.totalevac,fill:'#00cc00'})
       }   
+      
       
   }) 
 
@@ -77,7 +78,7 @@ function Chart({ title} ) {
     <div className="chart">
   
     <div className="chartContainer">
-    <ResponsiveContainer width="100%" height="170%">
+    <ResponsiveContainer width="100%" height="100%">
     {/* {users.map(res => ( */}
         <ComposedChart
           layout="vertical"
@@ -97,7 +98,7 @@ function Chart({ title} ) {
           
           <Tooltip />
           <Legend />
-          <Bar dataKey="capacity" barSize={30} fill="fill" />        
+          <Bar dataKey="totalevac" barSize={50} fill="fill" />        
         </ComposedChart>
         {/* ))} */}
       </ResponsiveContainer>

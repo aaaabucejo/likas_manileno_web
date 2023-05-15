@@ -15,7 +15,7 @@ function List() {
   const [users,setUser] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('https://likasmanileno-backend.herokuapp.com/app/getUsers')
+          axios.post('http://localhost:4000/app/getUsers')
               .then(res => {
                   // console.log(res);
                   setUser(res.data);
@@ -34,41 +34,42 @@ function List() {
     }else if(status == 'Forced'){
       return '#FF5733'
     }  
+
 };
 
-  return (
-    <TableContainer component={Paper} className="table">
-    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-      <TableHead>
-        <TableRow>
-          {/* <TableCell className="tableCell">ID No.</TableCell> */}
-          <TableCell className="tableCell">First Name</TableCell>
-          <TableCell className="tableCell">Last Name</TableCell>
-          <TableCell className="tableCell">Contact No.</TableCell>
-          <TableCell className="tableCell">Date Admitted</TableCell>
-          <TableCell className="tableCell">Site Transfered</TableCell>
-          <TableCell className="tableCell">Age</TableCell>
-          <TableCell className="tableCell">Status</TableCell>
-          {/* <TableCell className="tablecell">actions</TableCell> */}
+return (
+  <TableContainer component={Paper} className="table">
+  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableHead>
+      <TableRow className="rowColor">
+        {/* <TableCell className="tableCell">ID No.</TableCell> */}
+        <TableCell className="tableCellName" align="center">First Name</TableCell>
+        <TableCell className="tableCellName" align="center">Last Name</TableCell>
+        <TableCell className="tableCellName" align="center">Contact No.</TableCell>
+        <TableCell className="tableCellName" align="center">Date Admitted</TableCell>
+        <TableCell className="tableCellName" align="center">Site Transfered</TableCell>
+        <TableCell className="tableCellName" align="center">Age</TableCell>
+        <TableCell className="tableCellName" align="center">Status</TableCell>
+        {/* <TableCell className="tablecell">actions</TableCell> */}
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {users.map(res => (
+        <TableRow key={res.id}>
+          {/* <TableCell>{res._id}</TableCell> */}
+          <TableCell className="tableCell" align="center">{res.firstName}</TableCell>
+          <TableCell  className="tableCell" align="center">{res.lastName}</TableCell>
+          <TableCell  className="tableCell" align="center">{res.contactNo}</TableCell>
+          <TableCell  className="tableCell" align="center">{moment(res.dateAdmitted).format('lll')}</TableCell>
+          <TableCell  className="tableCell" align="center">{res.name}</TableCell>
+          <TableCell  className="tableCell" align="center"> <span className={`age ${res.status}`}>{res.age}</span></TableCell>
+          <TableCell  className="tableCell"  align="center"> <button style={{backgroundColor:`${getColor(res.status)}`, color:'#ffff', fontWeight:'500', border:'none', borderRadius:'4pt', fontSize:'10pt'}} >{res.status}</button></TableCell>         
         </TableRow>
-      </TableHead>
-      <TableBody>
-        {users.map(res => (
-          <TableRow key={res.id}>
-            {/* <TableCell>{res._id}</TableCell> */}
-            <TableCell className="tableCell">{res.firstName}</TableCell>
-            <TableCell  className="tableCell">{res.lastName}</TableCell>
-            <TableCell  className="tableCell">{res.contactNo}</TableCell>
-            <TableCell  className="tableCell">{moment(res.dateAdmitted).format('lll')}</TableCell>
-            <TableCell  className="tableCell">{res.siteT}</TableCell>
-            <TableCell  className="tableCell"><span className={`age ${res.status}`}>{res.age}</span></TableCell>
-            <TableCell  className="tableCell" > <button style={{backgroundColor:`${getColor(res.status)}`, color:'#ffff', fontWeight:'500', border:'none', borderRadius:'4pt', fontSize:'10pt'}} >{res.status}</button></TableCell>         
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  </TableContainer>
-  )
+      ))}
+    </TableBody>
+  </Table>
+</TableContainer>
+)
 }
 
 export default List

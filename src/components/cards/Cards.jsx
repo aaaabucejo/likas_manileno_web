@@ -42,7 +42,7 @@ function Cards() {
     const fetchPosts = async () => {
         axios.post('http://localhost:4000/app/getUsers')
             .then(res => {
-                const total = res.data.filter((tl) => tl.status >= 60);
+                const total = res.data.filter((tl) => tl.age >= 60);
                 setTotalSenior(total.length)
                 // console.log(res)
                 // console.log(total.length)

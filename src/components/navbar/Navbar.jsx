@@ -19,13 +19,13 @@ function Navbar() {
       fetchPosts();
   }, []);
 
-  const[stat,setStat] = useState('Forced');
+  const[status,setStatus] = useState('Forced');
   const setForce = () => {
     //update status
     const data = {
-      stat:stat
+      status:status
     }
-    axios.post('http://localhost:4000/app/updataStatus',data)
+    axios.post('http://localhost:4000/app/updateStatus',data)
     .then(res => {
       console.log(res);
     }).catch(err => {

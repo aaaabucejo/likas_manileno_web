@@ -15,27 +15,31 @@ const Input = styled('input')({
 
 
 function EditSite() {
-    const[address,setAddress] = useState("");
-    const[capacity,setCapacity] = useState("");
-    const[room,setRoom] = useState("");
-    const[restroom,setRestRoom] = useState("");
-    const[kitchen,setKitchen] = useState("");
-    const[evehicle,setEvehicle] = useState("");
-    const[firstaid,setFirstAid] = useState("");
-    const[official,setOfficial] = useState("");
-    const[description,setDescription] = useState("");
+  const[name,setName] = useState("");
+  const[address,setAddress] = useState("");
+  const[latitude,setLatitude]=useState("");
+  const[longtitude,setLongtitude]=useState("");
+  const[totalevac,setTotalEvac]=useState('0');
+  const[capacity,setCapacity] = useState("");
+  const[room,setRoom] = useState("");
+  const[restroom,setRestRoom] = useState("");
+  const[kitchen,setKitchen] = useState("");
+  const[flood,setFlood] = useState("");
+  const[groundrupture,setGroundRupture] = useState("");
 
     function UpdateLocation(){
       const data = {
-        address: address, //key value
+        name: name,
+        address: address,
+        latitude: latitude,
+        longtitude: longtitude,
+        totalevac: totalevac,
         capacity: capacity,
         room: room,
         restroom: restroom,
         kitchen: kitchen,
-        evehicle: evehicle,
-        firstaid: firstaid,
-        official: official,
-        description: description
+        flood: flood,
+        groundrupture: groundrupture
       }
     axios.post('http://localhost:4000/app/updateLocation',data)
     .then(res => {
@@ -80,12 +84,12 @@ function EditSite() {
       id="demo-helper-text-misaligned-no-helper" 
       label="Address" 
       style={{width:'45vw'}}
-      onChange={(e) => setAddress(e.target.value)}
+      
     />
      <TextField 
       id="demo-helper-text-misaligned-no-helper" 
       label="Capacity" 
-      onChange={(e) => setCapacity(e.target.value)}
+      
     />
      <TextField 
       id="demo-helper-text-misaligned-no-helper" 
@@ -95,34 +99,34 @@ function EditSite() {
      <TextField 
       id="demo-helper-text-misaligned-no-helper" 
       label="Restrooms" 
-      onChange={(e) => setRestRoom(e.target.value)}
+      
     />
      <TextField 
       id="demo-helper-text-misaligned-no-helper" 
       label="Kitchens" 
-      onChange={(e) => setKitchen(e.target.value)}
+     
     />
       <TextField 
       id="demo-helper-text-misaligned-no-helper" 
       label="Emergency Vechiles" 
-      onChange={(e) => setEvehicle(e.target.value)}
+      
     />
       <TextField 
       id="demo-helper-text-misaligned-no-helper" 
       label="First Aid" 
-      onChange={(e) => setFirstAid(e.target.value)}
+      
     />
       <TextField 
       id="demo-helper-text-misaligned-no-helper" 
       label="Officials" 
-      onChange={(e) => setOfficial(e.target.value)}
+     
     />
       <TextField
            required
           id="outlined-required"
           label="Description"
           placeholder="Full"
-          onChange={(e) => setDescription(e.target.value)}
+          
         />
     </Box>
 

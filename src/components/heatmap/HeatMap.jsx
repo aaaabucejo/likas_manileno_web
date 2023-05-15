@@ -2,6 +2,7 @@
 import { MapContainer, CircleMarker, TileLayer,Tooltip, Marker } from "react-leaflet";
 import React,{useEffect,useState} from "react";
 import axios, { Axios } from "axios";
+
 // import data from "./cities";
 
 function HeatMap() {

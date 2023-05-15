@@ -32,18 +32,26 @@ function Login() {
   //SnackBar
   const [emailVerificationOpen, setEmailerVerificationOpen] = React.useState(false);
   const [fillUpConfirm, setFillUpConfirm] = React.useState(false);
+  const [invalidEmailAdd, setInvalidEmailAdd] = React.useState(false);
+  const [passMore, setPassMore] = React.useState(false);
+  const [passLess, setPassLess] = React.useState(false);
+  const [invalidName, setInvalidName] = React.useState(false);
+  const [invalidContact, setInvalidContact] = React.useState(false);
   
 
   const [open, setOpen] = React.useState(false);
 
-
-  const handleSnackClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  //pang fade-away ng snackbar
+  const handleSnackClose = (event) => {
 
     setFillUpConfirm(false);
     setEmailerVerificationOpen(false)
+    setInvalidEmailAdd(false)
+    setPassMore(false)
+    setPassLess(false)
+    setInvalidName(false)
+    setInvalidContact(false)
+
   };
 
   //register
@@ -64,9 +72,6 @@ function Login() {
   const navigate = useNavigate()
   const [formErrors, setFormErrors] = useState({});
 
-  
-
-
   const handleButton = () =>{
    
     //regex forms
@@ -74,7 +79,6 @@ function Login() {
     const regexLetterOnly = /^[a-zA-Z ]*$/;
     const regexNumberOnly = /^[0-9\b]+$/;
 
-    
     const data = {
       email: email,
       passWord: passWord,
@@ -85,48 +89,37 @@ function Login() {
     }
     
     if(data.email == '' || data.passWord == '' || data.firstName == '' || data.lastName == '' || data.contact == '' || data.age == ''){
-      console.log('empty')
       setFillUpConfirm(true);
     }else if(!regexEmail.test(data.email)){
-      <Alert severity="warning">password must be more than 4 characters</Alert>
-
-      console.log('invalid email address')
+      setInvalidEmailAdd(true);
     }else if(data.passWord.length< 4){
-      <Alert severity="warning">password must be more than 4 characters</Alert>
-      console.log('password must be more than 4 characters')
+      setPassMore(true);
     }else if(data.passWord.length>8){
-      console.log('password cannot exceed more than 8 characters')
+      setPassLess(true);
     }else if(!regexLetterOnly.test(data.firstName) || !regexLetterOnly.test(data.lastName)){
-      console.log('make sure you have input correct value on first name and last name')
+      setInvalidName(true);
     }else if(!regexNumberOnly.test(data.contact) || data.contact.length < 11 || data.contact.length > 11){
-      console.log('please make sure you have input valid contact number')
-    // }else if(data.contact.length ){
-    }else{
-      console.log('all form are fill up')
+      setInvalidContact(true);
+    }else{     
+      const data = {
+        email: email,
+        passWord: passWord,
+        firstName: firstName,
+        lastName: lastName,
+        contact: contact,
+        age: age,
+      }
+    //dito ma sasave ng database
+    axios.post('http://localhost:4000/app/signupofficials',data)
+    .then(res => {
+      console.log(res)
+      setOpen(false);
       setEmailerVerificationOpen(true);
-      setFillUpConfirm(false);
-      //i-cocomment ko muna yung backend para  ma-test mo sya pag nag test ka at di mag error
-    //   const data = {
-    //     email: email,
-    //     passWord: passWord,
-    //     firstName: firstName,
-    //     lastName: lastName,
-    //     contact: contact,
-    //     age: age,
-    //   }
-    // //dito ma sasave ng database
-    // axios.post('http://localhost:4000/app/signupofficials',data)
-    // .then(res => {
-    //   console.log(res)
-    //   setOpen(false);
-    //   setAlertOpen(true);
-    // }).catch((res) =>{
-    //   console.log(res)
-    // })
+    }).catch((res) =>{
+      console.log(res)
+    })
    } 
   }
-
-  
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -146,13 +139,14 @@ function Login() {
       passWord: passWord
     }
     
-    axios.post('http://localhost:4000/app/signin',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/signin',data)
     .then(res => {
       if(res.data.status =='Login Successful'){
         message = res.data.status;
         navigate('/')
          localStorage.setItem('token',res.data.token)
          console.log(res.data)
+         console.log('test')
          
       } else if (res.data.status == 'incorrect username or password'){
         message = res.data.status;
@@ -294,27 +288,51 @@ function Login() {
         </Stack>
         </DialogActions>
       </Dialog>
-      
            </div>
-           
               <button className="loginButton" onClick={handleLogin}>Login</button>
-              {/* Verification alert */}
-              <Stack spacing={2} sx={{ width: '100%' }}>
+              {/* Alert */}
+            <Stack spacing={2} sx={{ width: '100%' }}>
               <Snackbar open={emailVerificationOpen} autoHideDuration={4000} onClose={handleSnackClose}>
-              <Alert severity="info">A verification mail has been sent to your email.
-              </Alert>
+              <Alert severity="info">A verification mail has been sent to your email.</Alert>
               </Snackbar>
             </Stack>
             
             <Stack spacing={2} sx={{ width: '100%' }}>
               <Snackbar open={fillUpConfirm} autoHideDuration={4000} onClose={handleSnackClose} >
-              <Alert severity="info">Please make sure you have fill up all the form
-              </Alert>
+              <Alert severity="info">Please make sure you have fill up all the form</Alert>
               </Snackbar>
             </Stack>
-             {/* End Verification alert */}
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+              <Snackbar open={invalidEmailAdd} autoHideDuration={4000} onClose={handleSnackClose} >
+              <Alert severity="info">invalid email address</Alert>
+              </Snackbar>
+            </Stack>
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+              <Snackbar open={passMore} autoHideDuration={4000} onClose={handleSnackClose} >
+              <Alert severity="info">password must be more than 4 characters</Alert>
+              </Snackbar>
+            </Stack>
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+              <Snackbar open={passLess} autoHideDuration={4000} onClose={handleSnackClose} >
+              <Alert severity="info">password cannot exceed more than 8 characters</Alert>
+              </Snackbar>
+            </Stack>
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+              <Snackbar open={invalidName} autoHideDuration={4000} onClose={handleSnackClose} >
+              <Alert severity="info">Make sure you have input proper firstname or lastname</Alert>
+              </Snackbar>
+            </Stack>
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+              <Snackbar open={invalidContact} autoHideDuration={4000} onClose={handleSnackClose} >
+              <Alert severity="info">please make sure you have input valid contact number</Alert>
+              </Snackbar>
+            </Stack>
           </div>
-       
         </div>
       </div>
     </div>

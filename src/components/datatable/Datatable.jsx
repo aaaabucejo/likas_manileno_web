@@ -55,7 +55,7 @@ function List() {
   const[firstName,setFirstName] = useState("");
   const[lastName,setLastName] = useState("");
   const[contactNo,setContactNo] = useState("");
-  const[siteT,setSiteT] = useState("");
+  const[name,setName] = useState("");
   const[address,setAddress] = useState("");
   const[latitude,setLatitude] = useState("");
   const[longtitude,setLongtitude] = useState("");
@@ -64,6 +64,8 @@ function List() {
   //
   const[username,setUsername] = useState("");
   const[password,setPassword] = useState("");
+  const[roomName,setRoomName] = useState("");
+  const[inoutStatus,setInOutStatus] = useState("");
   
   const [open, setOpen] = React.useState(false);
   const [Dialogopen, setDialogOpen] = React.useState(false);
@@ -74,14 +76,16 @@ function List() {
       firstName: firstName,
       lastName: lastName,
       contactNo: contactNo,
-      siteT: siteT,
+      name: name,
       address:address,
       latitude,latitude,
       longtitude,longtitude,
       age: age,
       status:status,
       username: username,
-      password: password
+      password: password,
+      roomName:roomName,
+      inoutStatus:inoutStatus
     }
     
     //dito ma sasave ng database
@@ -182,10 +186,10 @@ function List() {
     <div className="datatableTitle">
       Evacuees
       <Button onClick={handleClickOpen}   startIcon={<AddIcon/>} variant="contained" disableElevation> 
-      Add Resident
+      Add EVACUEE
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle style={{fontWeight: 500,}}>ADD RESIDENT </DialogTitle>
+        <DialogTitle style={{fontWeight: 500,}}>ADD EVACUEE</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Fill out the form below to add an resident account that lives on your vacinity.
@@ -218,10 +222,10 @@ function List() {
             autoFocus
             maxlength='11'
             margin="dense"
-            id="siteT"
+            id="name"
             label="Site Transfer"
             fullWidth
-            onChange={(e) => setSiteT(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />
           <TextField
             autoFocus
@@ -299,6 +303,22 @@ function List() {
             type="password"
             fullWidth
           />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="roomname"
+            label="Room Name"
+            fullWidth
+            onChange={(e) => setRoomName(e.target.value)}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="inOut"
+            label="In/out"
+            fullWidth
+            onChange={(e) => setInOutStatus(e.target.value)}
+          />
         
         </DialogContent>
         <DialogActions>
@@ -317,33 +337,34 @@ function List() {
       <TableHead>
         <TableRow className="rowColor">
           {/* <TableCell className="tableCell">ID No.</TableCell> */}
-          <TableCell className="tableCellName">First Name</TableCell>
-          <TableCell className="tableCellName">Last Name</TableCell>
-          <TableCell className="tableCellName">Contact No.</TableCell>
-          <TableCell className="tableCellName">Date Admitted</TableCell>
-          <TableCell className="tableCellName">Site Transfered</TableCell>
-          <TableCell className="tableCellName">Address</TableCell>
-          <TableCell className="tableCellName">Age</TableCell>
-          <TableCell className="tableCellName">Status</TableCell>
-          <TableCell className="tableCellName">Actions</TableCell>
+          <TableCell className="tableCellName" align="center">First Name</TableCell>
+          <TableCell className="tableCellName" align="center">Last Name</TableCell>
+          <TableCell className="tableCellName" align="center">Contact No.</TableCell>
+          <TableCell className="tableCellName" align="center">Date Admitted</TableCell>
+          <TableCell className="tableCellName" align="center">Site Transfered</TableCell>
+          <TableCell className="tableCellName" align="center">Address</TableCell>
+          <TableCell className="tableCellName" align="center">Age</TableCell>
+          <TableCell className="tableCellName" align="center">Status</TableCell>
+          <TableCell className="tableCellName" align="center">Actions</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {users.map((res) => (
           <TableRow key={res.id}>
             {/* <TableCell>{res._id}</TableCell> */}
-            <TableCell className="tableCell">{res.firstName}</TableCell>
-            <TableCell  className="tableCell">{res.lastName}</TableCell>
-            <TableCell  className="tableCell">{res.contactNo}</TableCell>
-            <TableCell  className="tableCell">{moment(res.dateAdmitted).format('lll')}</TableCell>
-            <TableCell  className="tableCell">{res.siteT}</TableCell>
-            <TableCell  className="tableCell">{res.address}</TableCell>
-            <TableCell  className="tableCell"><span className={`status ${res.age}`}>{res.age}</span></TableCell>            
-            <TableCell  className="tableCell" > <button style={{backgroundColor:`${getColor(res.status)}`, color:'#ffff', fontWeight:'500', border:'none', borderRadius:'4pt', fontSize:'10pt'}} >{res.status}</button></TableCell>
+            <TableCell className="tableCell" align="center">{res.firstName}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.lastName}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.contactNo}</TableCell>
+            <TableCell  className="tableCell" align="center">{moment(res.dateAdmitted).format('lll')}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.name}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.address}</TableCell>
+            <TableCell  className="tableCell" align="center"><span className={`status ${res.age}`}>{res.age}</span></TableCell>            
+            <TableCell  className="tableCell" align="center"> <button style={{backgroundColor:`${getColor(res.status)}`, color:'#ffff', fontWeight:'500', border:'none', borderRadius:'4pt', fontSize:'10pt'}} >{res.status}</button></TableCell>
             
-            <TableCell className="tableCell">
-            <button onClick={() =>viewPin(res.latitude,res.longtitude)}>View</button>
-            <button onClick={openDelete}>Delete</button>
+            <TableCell align="center" className="tableCell">
+            <Button align="center" variant="contained" size="small"  onClick={() =>viewPin(res.latitude,res.longtitude)}>View</Button>
+            &nbsp; &nbsp; 
+            <Button align="center" variant="contained" color="error" size='small' onClick={openDelete}>Delete</Button>
             <Dialog
               open={Dialogopen}
               onClose={closeDelete}

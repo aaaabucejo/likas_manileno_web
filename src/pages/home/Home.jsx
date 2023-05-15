@@ -15,16 +15,16 @@ import Cards from "../../components/cards/Cards";
 import "./home.scss"
 // export default class Home extends Component{
 const Home = () => {
-  // const navigate = useNavigate()
-  // if(localStorage.getItem('token') === null){
+  const navigate = useNavigate()
+  if(localStorage.getItem('token') === null){
   // navigate('/Login') 
-  // // console.log('no token') 
-  // return (
-  //   <div>
-  //     {(<Login/>)}
-  //   </div>
-  // ) 
-  // }else{
+  // console.log('no token') 
+  return (
+    <div>
+      {(<Login/>)}
+    </div>
+  ) 
+  }else{
     // console.log('has token')
   return (
     <div className='home'>
@@ -52,5 +52,5 @@ const Home = () => {
     </div>
   )
 }
-// }
+}
 export default Home
