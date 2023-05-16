@@ -134,14 +134,14 @@ function Sitedata(props) {
           // 2 axios
           useEffect(() => {
             const fetchPosts = async () => {
-              axios.post('http://localhost:4000/app/getLocation')
+              axios.post('https://likasmanileno-api.onrender.com/app/getLocation')
                 .then(resloc => {
                   setLocations(resloc.data);
-                  axios.post('http://localhost:4000/app/getUsers')
+                  axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
                     .then(resusers => {
                       setUser(resusers.data)
                       //add axios.post here getRooms
-                      axios.post('http://localhost:4000/app/getRooms')
+                      axios.post('https://likasmanileno-api.onrender.com/app/getRooms')
                       .then(resrooms => {
                         // setRoom(resrooms.data);
                         // Process the rooms data as needed
@@ -164,13 +164,13 @@ function Sitedata(props) {
                         // console.log(capCounter)
                         // console.log(roomCounter)
                         for(let i = 0; i < capCounter.length; i++){
-                          axios.post('http://localhost:4000/app/updateLocationCapacity',capCounter[i])
+                          axios.post('https://likasmanileno-api.onrender.com/app/updateLocationCapacity',capCounter[i])
                           .then(rescap=>{
                             // console.log(rescap)
                           });
                         }
                         for(let i = 0; i < capCounter.length; i++){
-                        axios.post('http://localhost:4000/app/updateRoomCount', roomCounter[i])
+                        axios.post('https://likasmanileno-api.onrender.com/app/updateRoomCount', roomCounter[i])
                           .then(resroom => {
 
                           });
@@ -191,7 +191,7 @@ function Sitedata(props) {
                         // console.log(newArr)                          
                         } 
                         for (let i = 0; i < newArr.length; i++) {
-                          axios.post('http://localhost:4000/app/updateLocationTotal',newArr[i])
+                          axios.post('https://likasmanileno-api.onrender.com/app/updateLocationTotal',newArr[i])
                              .then(restotal =>{
                             // console.log(rescap)
                             // console.log(resloc.data)
@@ -234,7 +234,7 @@ function Sitedata(props) {
       }
       // console.log(data)
       //dito ma sasave ng database
-      axios.post('http://localhost:4000/app/signuplocation',data)
+      axios.post('https://likasmanileno-api.onrender.com/app/signuplocation',data)
       .then(res => {
         console.log(res.data)
         setOpen(false);
@@ -280,7 +280,7 @@ function Sitedata(props) {
     }
     
     // console.log(data)
-    axios.post('http://localhost:4000/app/deletelocation',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/deletelocation',data)
     .then(res => {
       if(res.data != null){
         // alert("deleted")

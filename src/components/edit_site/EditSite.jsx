@@ -41,7 +41,7 @@ function EditSite() {
         flood: flood,
         groundrupture: groundrupture
       }
-    axios.post('http://localhost:4000/app/updateLocation',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/updateLocation',data)
     .then(res => {
       console.log(res)
     }).catch((res) =>{

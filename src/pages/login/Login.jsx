@@ -110,7 +110,7 @@ function Login() {
         age: age,
       }
     //dito ma sasave ng database
-    axios.post('http://localhost:4000/app/signupofficials',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/signupofficials',data)
     .then(res => {
       console.log(res)
       setOpen(false);

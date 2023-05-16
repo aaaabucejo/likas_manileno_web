@@ -29,7 +29,7 @@ function Chart({ title} ) {
   const [locations,setLocations] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('http://localhost:4000/app/getlocation')
+          axios.post('https://likasmanileno-api.onrender.com/app/getlocation')
               .then(res => {
                   
                   setLocations(res.data);

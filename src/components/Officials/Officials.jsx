@@ -75,7 +75,7 @@ function Officials() {
     }
     
     //dito ma sasave ng database
-    axios.post('http://localhost:4000/app/signupofficials',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/signupofficials',data)
     .then(res => {
       // console.log(res)
       setOpen(false);
@@ -87,7 +87,7 @@ function Officials() {
   const [users,setUser] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('http://localhost:4000/app/getofficials')
+          axios.post('https://likasmanileno-api.onrender.com/app/getofficials')
               .then(res => {
                   // console.log(res);
                   setUser(res.data);
@@ -104,7 +104,7 @@ function Officials() {
       email:email         
     }
     console.log(data)
-    axios.post('http://localhost:4000/app/deleteofficials',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/deleteofficials',data)
     .then(res => {
       if(res.data != null){
         setDialogOpen(false);
@@ -146,7 +146,7 @@ function Officials() {
       contact:contact
     }
     console.log(data)
-    axios.post('http://localhost:4000/app/updateofficials',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/updateofficials',data)
     .then(res => {
       console.log(res)
       // setOpenEditHotline(false);

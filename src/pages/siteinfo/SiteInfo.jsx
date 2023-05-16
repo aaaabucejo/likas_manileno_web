@@ -124,7 +124,7 @@ function SiteInfo() {
     }
     
     // dito ma sasave ng database
-    axios.post('http://localhost:4000/app/signupRoom',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/signupRoom',data)
     .then(res => {
       console.log(res)
       setOpen(false);
@@ -201,7 +201,7 @@ function SiteInfo() {
   // const [userss,setUsers] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('http://localhost:4000/app/getlocation')
+          axios.post('https://likasmanileno-api.onrender.com/app/getlocation')
               .then(res => {
                   // console.log(res.data);
                   setLocations(res.data);
@@ -220,11 +220,11 @@ function SiteInfo() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      axios.post('http://localhost:4000/app/getUsers')
+      axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
         .then(resusers => {
           setUsers(resusers.data);
           // console.log(resusers)
-          axios.post('http://localhost:4000/app/getRooms')
+          axios.post('https://likasmanileno-api.onrender.com/app/getRooms')
             .then(resrooms => {
               setRooms(resrooms.data)
               // console.log(resloc.data)
@@ -241,7 +241,7 @@ function SiteInfo() {
                 //  console.log(newArr)                         
                 } 
                 for (let i = 0; i < newArr.length; i++) {
-                  axios.post('http://localhost:4000/app/updateRoomTotal',newArr[i])
+                  axios.post('https://likasmanileno-api.onrender.com/app/updateRoomTotal',newArr[i])
                      .then(rescap =>{
                     // console.log(rescap)
                     // console.log(resloc.data)
@@ -269,7 +269,7 @@ function SiteInfo() {
       lastName: lastName,      
     }
     console.log(data)
-    axios.post('http://localhost:4000/app/deleteresident',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/deleteresident',data)
     .then(res => {
       if(res.data != null){
       setDialogOpen(false);
@@ -287,7 +287,7 @@ function SiteInfo() {
       roomName: roomName,      
     }
     console.log(data)
-    axios.post('http://localhost:4000/app/deleteroom',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/deleteroom',data)
     .then(res => {
       if(res.data != null){
       setDialogOpen(false);
@@ -344,7 +344,7 @@ function SiteInfo() {
       groundrupture: groundrupture
     }
     
-    axios.post('http://localhost:4000/app/updateLocation',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/updateLocation',data)
     .then(res => {
       console.log(res)
       setOpenEditHotline(false);

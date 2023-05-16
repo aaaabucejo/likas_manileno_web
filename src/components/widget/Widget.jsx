@@ -18,7 +18,7 @@ const Widget = ({ type }) => {
     const[totaldata,setTotaldata,] = useState([])
     useEffect(() => {
         const fetchPosts = async () => {
-            axios.post('http://localhost:4000/app/getUsers')
+            axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
                 .then(res => {
                     console.log(res);
                     setTotaldata(res.data.length);

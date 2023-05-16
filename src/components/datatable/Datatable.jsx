@@ -89,7 +89,7 @@ function List() {
     }
     
     //dito ma sasave ng database
-    axios.post('http://localhost:4000/app/signup',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/signup',data)
     .then(res => {
       console.log(res)
       setOpen(false);
@@ -125,7 +125,7 @@ function List() {
   const [users,setUser] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('http://localhost:4000/app/getUsers')
+          axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
               .then(res => {
                   // console.log(res);
                   setUser(res.data);
@@ -144,7 +144,7 @@ function List() {
       lastName: lastName,      
     }
     console.log(data)
-    axios.post('http://localhost:4000/app/deleteresident',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/deleteresident',data)
     .then(res => {
       if(res.data != null){
       setDialogOpen(false);

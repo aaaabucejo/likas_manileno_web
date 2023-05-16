@@ -8,7 +8,7 @@ function Navbar() {
   const [users,setUser] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('http://localhost:4000/app/getUsers')
+          axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
               .then(res => {
                   // console.log(res);
                   setUser(res.data);
@@ -25,7 +25,7 @@ function Navbar() {
     const data = {
       status:status
     }
-    axios.post('http://localhost:4000/app/updateStatus',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/updateStatus',data)
     .then(res => {
       console.log(res);
     }).catch(err => {

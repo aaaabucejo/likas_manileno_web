@@ -67,7 +67,7 @@ function Hotlinetable() {
       area:area
     }
    
-    axios.post('http://localhost:4000/app/updatehotline',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/updatehotline',data)
     .then(res => {
       console.log(res)
       setOpenEditHotline(false);
@@ -96,7 +96,7 @@ function Hotlinetable() {
       directline: directline,
       area: area
     }
-    axios.post('http://localhost:4000/app/signuphotline',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/signuphotline',data)
     .then(res => {
       console.log(res)
       // setOpen(false);
@@ -109,7 +109,7 @@ function Hotlinetable() {
   const [hotline,setHotline] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('http://localhost:4000/app/gethotline')
+          axios.post('https://likasmanileno-api.onrender.com/app/gethotline')
               .then(res => {
                   // console.log(res);
                   setHotline(res.data);
@@ -136,7 +136,7 @@ function Hotlinetable() {
     }
     console.log(data)
     
-    axios.post('http://localhost:4000/app/deletehotline',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/deletehotline',data)
     .then(res => {
       if(res.data != null){
       }

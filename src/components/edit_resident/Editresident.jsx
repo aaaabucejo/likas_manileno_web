@@ -37,7 +37,7 @@ function Editresident() {
       age:age
     }
     
-    axios.post('http://localhost:4000/app/updateUsers',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/updateUsers',data)
     .then(res => {
       console.log(res)
     }).catch((res) =>{
