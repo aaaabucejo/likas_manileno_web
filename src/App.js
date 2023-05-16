@@ -10,7 +10,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import SiteInfo from "./pages/siteinfo/SiteInfo";
 import Editesite from "./pages/EditSite/Editesite";
 import Rooms from "./pages/rooms/Rooms";
-import EmailVerification from './components/emailVerification/EmailVerification'
+
 
 
 
@@ -31,11 +31,7 @@ function App() {
     <div className="App">
     <BrowserRouter>
     <Routes>
-      <Route path="/verifyUserEmail/:email/token" element={
-        <div>
-          <EmailVerification/>
-        </div>}
-        />
+     
      <Route path="/">
         <Route index element={<Home />}/>
         <Route path="login" element={<Login/>}/> 
