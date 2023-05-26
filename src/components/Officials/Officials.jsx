@@ -165,7 +165,7 @@ function Officials() {
     axios.post('https://likasmanileno-api.onrender.com/app/updateofficials',data)
     .then(res => {
       console.log(res)
-      setOpenEditHotline(false);
+      // setOpenEditHotline(false);
       // window.location.reload();
     }).catch((res) =>{
       console.log(res)
