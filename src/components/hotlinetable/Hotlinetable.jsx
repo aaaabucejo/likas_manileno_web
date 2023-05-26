@@ -52,25 +52,28 @@ function Hotlinetable() {
 
   // edit hotline form
   const [openEditHotline, setOpenEditHotline] = React.useState(false);
-
-  const handleEditOpen = () => {
-    setOpenEditHotline(true);
-  };
-
   const [Dialogopen, setDialogOpen] = React.useState(false);
 
-  const handleEditClose = () => {
+  const handleEditOpen = (_id) => {
+    setOpenEditHotline(true);
+    set_Id(_id);
+    
+  };
+
+  const handleEditClose = (_id) => {
     
     const data = {
-      agency: agency,
-      directline: directline,
-      area:area
+      _id:_id,
+      agency: agencyNewChange? agency: getDefaultValue?.agency || '',
+      directline: directlineNewChange? directline: getDefaultValue?.directline || '',
+      area: areaNewChange? area: getDefaultValue?.area || '',
     }
-   
+    // console.log(data)
     axios.post('https://likasmanileno-api.onrender.com/app/updatehotline',data)
     .then(res => {
       console.log(res)
       setOpenEditHotline(false);
+      window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
@@ -85,10 +88,16 @@ function Hotlinetable() {
 
 // snackbar
   const [openSnack, setOpenSnack] = React.useState(false);
+  const [_id,set_Id] = useState("");
   const[agency,setAgency] = useState("");
   const[directline,setDirectline] = useState("");
   const[area,setArea] = useState("");
 
+  //this will check if the text fields are changed
+  const [agencyNewChange,setAgencyNewChange] = useState(false);
+  const [directlineNewChange,setDirectLineNewChange] = useState(false);
+  const [areaNewChange,setAreaNewChange] = useState(false);
+  const [selectedHotline,setSeletedHotline] = useState("");
 
   const handleAddSnack = () => {
     const data = {
@@ -100,7 +109,7 @@ function Hotlinetable() {
     .then(res => {
       console.log(res)
       // setOpen(false);
-        setOpenSnack(true);
+      window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
@@ -129,18 +138,14 @@ function Hotlinetable() {
   };
   // snackbar
 
-  const deletehotline=(directline) =>{
+  const deletehotline=() =>{
 
-    const data = {
-      directline:directline      
-    }
-    console.log(data)
     
-    axios.post('https://likasmanileno-api.onrender.com/app/deletehotline',data)
+    console.log(selectedHotline)
+    axios.post('https://likasmanileno-api.onrender.com/app/deletehotline',selectedHotline)
     .then(res => {
-      if(res.data != null){
-      }
-      console.log('deleted successful')
+      window.location.reload();
+      // console.log('deleted successful')
     }).catch((res) =>{
       console.log(res)
     })
@@ -158,13 +163,20 @@ function Hotlinetable() {
     setOpen(true);
   };
 
-  const openDelete = () => {
+  const openDelete = (_id,directline) => {
+    setSeletedHotline({_id,directline})
     setDialogOpen(true);
+    
+   
+
   };
 
   const closeDelete = () => {
     setDialogOpen(false);
   };
+
+  const getDefaultValue = hotline.find(hotline => hotline._id === _id);
+  
   
   return (
     <div className="hotlinetable">
@@ -243,8 +255,9 @@ function Hotlinetable() {
               <TableCell align="center">{res.directline}</TableCell>
               <TableCell align="center">{res.area}</TableCell>
               <TableCell align="center">
-              <Button variant="contained" size="small"   onClick={handleEditOpen}>Edit</Button>
-              <Button size="small" variant="contained" color="error" onClick={openDelete}>Delete</Button>
+              <Button variant="contained" size="small"   onClick={()=>handleEditOpen(res._id)}>Edit</Button>
+              &nbsp; &nbsp;
+              <Button size="small" variant="contained" color="error" onClick={()=>openDelete(res._id,res.directline)}>Delete</Button>
               {/* <Button  variant="contained" size="small" color="error" onClick={() =>deletehotline(res.directline)}>Delete</Button> */}
               <Dialog
               open={Dialogopen}
@@ -263,7 +276,7 @@ function Hotlinetable() {
               <DialogActions>
                 <Button onClick={closeDelete}>Cancel</Button>
                 {/* <Button onClick={closeDelete} autoFocus> */}
-                <Button onClick={() =>deletehotline(res.directline)}>Delete</Button>         
+                <Button onClick={deletehotline}>Delete</Button>         
               </DialogActions>
             </Dialog>
              </TableCell>
@@ -282,7 +295,11 @@ function Hotlinetable() {
                   id="EditAgencyName"
                   label="Agency Name"
                   fullWidth
-                  onChange={(e) => setAgency(e.target.value)}
+                  defaultValue={getDefaultValue? getDefaultValue.agency: ''}
+                  onChange={(e) => {
+                    setAgency(e.target.value);
+                    setAgencyNewChange(true)
+                  }}
                 />
                 <TextField
                   autoFocus
@@ -290,7 +307,11 @@ function Hotlinetable() {
                   id="EditContactNumber"
                   label="Contact#"
                   fullWidth
-                  onChange={(e) => setDirectline(e.target.value)}
+                  defaultValue={getDefaultValue? getDefaultValue.directline: ''}
+                  onChange={(e) => {
+                    setDirectline(e.target.value);
+                    setDirectLineNewChange(true);
+                  }}
                 />
                 <TextField
                   autoFocus
@@ -298,12 +319,16 @@ function Hotlinetable() {
                   id="EditArea"
                   label="Area"
                   fullWidth
-                  onChange={(e) => setArea(e.target.value)}
+                  defaultValue={getDefaultValue? getDefaultValue.area : ''}
+                  onChange={(e) => {
+                    setArea(e.target.value);
+                    setAreaNewChange(true);
+                  }}
                 />
               </DialogContent>
               <DialogActions>
                 <Button variant="contained" onClick={handleEditCancel}>Cancel</Button>
-                <Button variant="outlined" onClick={()=>handleEditClose(directline)}>Submit</Button>
+                <Button variant="outlined" onClick={()=>handleEditClose(_id)}>Submit</Button>
               </DialogActions>
             </Dialog>
              {/* Edit forms */}

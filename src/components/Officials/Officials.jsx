@@ -31,6 +31,7 @@ import MuiAlert from '@mui/material/Alert';
 
 function Officials() {
   const [open, setOpen] = React.useState(false);
+  const [_id,set_Id] = useState("");
   const[userName,setUserName] = useState("");
   const[passWord,setPassWord] = useState("");
   const[firstName,setFirstName] = useState("");
@@ -44,6 +45,14 @@ function Officials() {
   
    // Snackbar
    const [openSnack, setOpenSnack] = React.useState(false);
+
+   //this will check if the text fields are changed
+   const [firstNameChange,setFirstNameChanged] = useState(false);
+   const [lastNameChange,setLastNameChanged] = useState(false);
+   const [emailChange,setEmailChanged] = useState(false);
+   const [contactChange,setContactChanged] = useState(false);
+
+   const[selectedOfficial,setSelectedOfficial] = useState("");
 
    const handleAddSnack = () => {
      setOpenSnack(true);
@@ -79,6 +88,7 @@ function Officials() {
     .then(res => {
       // console.log(res)
       setOpen(false);
+      window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
@@ -98,16 +108,14 @@ function Officials() {
       fetchPosts();
   }, []);
 
-  const deleteAdd=(email) =>{
+  const deleteAdd=() =>{
     
-    const data = {
-      email:email         
-    }
-    console.log(data)
-    axios.post('https://likasmanileno-api.onrender.com/app/deleteofficials',data)
+    // console.log(selectedOfficial)
+    axios.post('https://likasmanileno-api.onrender.com/app/deleteofficials',selectedOfficial)
     .then(res => {
       if(res.data != null){
         setDialogOpen(false);
+        window.location.reload();
       }
     }).catch((res) =>{
       console.log(res)
@@ -116,12 +124,17 @@ function Officials() {
 
 
 
-  const openDelete = () => {
+  const openDelete = (_id,email) => {
     setDialogOpen(true);
+    setSelectedOfficial({_id,email})
   };
 
   const closeDelete = () => {
     setDialogOpen(false);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
   };
 
 
@@ -130,41 +143,46 @@ function Officials() {
     setOpen(false);
   };
 
-  const handleEditOpen = () => {
+  const handleEditOpen = (_id) => {
     setOpenEdit(true);
+    set_Id(_id)
+   
   };
 
   const handleEditCancel = () =>{
     setOpenEdit(false);
   }
 
-  const handleEditClose = () => {
+  const handleEditClose = (_id) => {
     const data = {
-      firstName:firstName,
-      lastName: lastName,
-      email:email,
-      contact:contact
+      _id:_id,
+      firstName:firstNameChange? firstName: getDefaultValue?.firstName || '',
+      lastName: lastNameChange? lastName: getDefaultValue?.lastName || '',
+      email:emailChange? email: getDefaultValue?.email || '',
+      contact:contactChange? contact: getDefaultValue?.contact || ''
     }
-    console.log(data)
+    
     axios.post('https://likasmanileno-api.onrender.com/app/updateofficials',data)
     .then(res => {
       console.log(res)
       // setOpenEditHotline(false);
+      window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
  
   };
 
+  const getDefaultValue = users.find(users => users._id === _id);
   
 
   return (
     <div className='officialtable'>
     <div className='datatableTitle'>
     Officials
-    {/* <Button onClick={handleClickOpen}   startIcon={<AddIcon/>} variant="contained" disableElevation> 
+    <Button onClick={handleClickOpen}   startIcon={<AddIcon/>} variant="contained" disableElevation> 
       Add Admin
-      </Button> */}
+      </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle style={{fontWeight: 500,}}>ADD ADMIN ACCOUNT </DialogTitle>
         <DialogContent>
@@ -176,6 +194,7 @@ function Officials() {
             margin="dense"
             id="firstName"
             label="First Name"
+            
             fullWidth
             onChange={(e) => setFirstName(e.target.value)}
           />
@@ -257,7 +276,7 @@ function Officials() {
         <Stack  direction="row" spacing={2}>
         <Button onClick={handleClose} variant="contained">Cancel</Button>
         {/* <Button onClick={handleButton}  variant="outlined">Add</Button> */}
-        <Button onClick={handleAddSnack}  variant="outlined">Add</Button>
+        <Button onClick={handleButton}  variant="outlined">Add</Button>
       <Snackbar open={openSnack} autoHideDuration={4000} onClose={handleCloseSnack}>
         <Alert onClose={handleCloseSnack} severity="success" sx={{ width: '100%' }}>
          New Admin Account Created
@@ -292,8 +311,9 @@ function Officials() {
             <TableCell  className="tableCell" align="center">{res.lastName}</TableCell>
             <TableCell  className="tableCell" align="center">{res.contact}</TableCell>
             <TableCell  className="tableCell" align="center"><span className={`status ${res.status}`}>{res.status}</span>
-            <Button variant="contained" size="small"   onClick={handleEditOpen}>Edit</Button>
-            <Button size="small" variant="contained" color="error" onClick={openDelete}>Delete</Button>
+            <Button variant="contained" size="small"   onClick={()=>handleEditOpen(res._id)}>Edit</Button>
+            &nbsp; &nbsp;
+            <Button size="small" variant="contained" color="error" onClick={()=>openDelete(res._id, res.email)}>Delete</Button>
             <Dialog
               open={Dialogopen}
               onClose={closeDelete}
@@ -311,7 +331,7 @@ function Officials() {
               <DialogActions>
                 <Button onClick={closeDelete}>Cancel</Button>
                 {/* <Button onClick={closeDelete} autoFocus> */}
-                <Button onClick={() =>deleteAdd(res.email)}>Delete</Button>         
+                <Button onClick={deleteAdd}>Delete</Button>         
               </DialogActions>
             </Dialog>
             </TableCell>
@@ -321,13 +341,18 @@ function Officials() {
                 <DialogContentText>
                  Fill out the fields you wish to change.
                 </DialogContentText>
+               
                 <TextField
                   autoFocus
                   margin="dense"
                   id="firstname"
                   label="First Name"
                   fullWidth
-                  onChange={(e) => setFirstName(e.target.value)}
+                  defaultValue={getDefaultValue? getDefaultValue.firstName : ''}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                    setFirstNameChanged(true);
+                  }}
                 />
                 <TextField
                   autoFocus
@@ -335,7 +360,12 @@ function Officials() {
                   id="lastname"
                   label="Last Name"
                   fullWidth
-                  onChange={(e) => setLastName(e.target.value)}
+                  defaultValue={getDefaultValue? getDefaultValue.lastName : ''}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                    setLastNameChanged(true)
+                    
+                  }}
                 />
                 <TextField
                   autoFocus
@@ -343,7 +373,12 @@ function Officials() {
                   id="email"
                   label="Email"
                   fullWidth
-                  onChange={(e) => setEmail(e.target.value)}
+                  defaultValue={getDefaultValue? getDefaultValue.email : ''}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailChanged(true)
+                    
+                  }}
                 />
                 <TextField
                   autoFocus
@@ -351,12 +386,17 @@ function Officials() {
                   id="contact"
                   label="Contact"
                   fullWidth
-                  onChange={(e) => setContact(e.target.value)}
+                  defaultValue={getDefaultValue? getDefaultValue.contact : ''}
+                  onChange={(e) => {
+                    setContact(e.target.value);
+                    setContactChanged(true)
+                    
+                  }}
                 />
               </DialogContent>
               <DialogActions>
                 <Button variant="contained" onClick={handleEditCancel}>Cancel</Button>
-                <Button variant="outlined" onClick={()=>handleEditClose(email)}>Submit</Button>
+                <Button variant="outlined" onClick={()=>handleEditClose(_id)}>Submit</Button>
               </DialogActions>
             </Dialog>
           </TableRow>

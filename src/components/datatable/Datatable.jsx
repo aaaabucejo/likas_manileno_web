@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react";
+import React,{useEffect,useState,useRef} from "react";
 import axios, { Axios } from "axios";
 import "./datatable.scss"
 import Table from '@mui/material/Table';
@@ -8,7 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {MapContainer, Marker, Popup, TileLayer, useMap} from 'react-leaflet'
+import {MapContainer, CircleMarker, Tooltip, TileLayer} from 'react-leaflet'
 import "leaflet/dist/leaflet.css"
 import L from "leaflet";
 import { Link } from "react-router-dom";
@@ -66,9 +66,37 @@ function List() {
   const[password,setPassword] = useState("");
   const[roomName,setRoomName] = useState("");
   const[inoutStatus,setInOutStatus] = useState("");
+  //this state holds the data selected in the row into to the dialog (for delete button)
+  const[selectedUser,setSelectedUser] = useState("");
   
   const [open, setOpen] = React.useState(false);
   const [Dialogopen, setDialogOpen] = React.useState(false);
+
+
+  //map direction
+  const mapRef = useRef();
+  const defaultCenter = [14.644220367678344, 121.09919699628975];
+  const defaultZoom = 16;
+  // const NULatLng = [14.604357914642005, 120.99459650978356];
+  
+  const [coordinates,setCoordinates] = useState("")
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (map) {
+      map.flyTo(coordinates, 18);
+    }
+  }, [coordinates]);
+  
+  const viewPin = (latitude,longtitude) => {
+  
+    setCoordinates([latitude,longtitude])
+    
+  };
+
+ 
+
+ 
 
   function handleButton(){
     //pag pinindot ko yung submit
@@ -98,8 +126,9 @@ function List() {
     })
   }
 
-  const openDelete = () => {
+  const openDelete = (_id, firstName, lastName) => {
     setDialogOpen(true);
+    setSelectedUser({_id,firstName,lastName})
   };
 
   const closeDelete = () => {
@@ -114,13 +143,7 @@ function List() {
     setOpen(false);
   };
 
-  const viewPin = (latitude,longtitude) => {
-    const data = [
-      latitude,
-      longtitude
-    ]
-    console.log(data)
-  };
+  
 
   const [users,setUser] = useState([]);
   useEffect(() => {
@@ -137,17 +160,14 @@ function List() {
   }, []);
 
   //get first and lastname
-  const deleteRes=(firstName, lastName) =>{
+  const deleteRes=() =>{
 
-    const data = {
-      firstName: firstName,
-      lastName: lastName,      
-    }
-    console.log(data)
-    axios.post('https://likasmanileno-api.onrender.com/app/deleteresident',data)
+    console.log(selectedUser)
+    axios.post('http://localhost:4000/app/deleteresident',selectedUser)
     .then(res => {
       if(res.data != null){
       setDialogOpen(false);
+      window.location.reload();
       }
     }).catch((res) =>{
       console.log(res)
@@ -165,24 +185,61 @@ function List() {
       }  
   };
 
-  const zoom = 13;
-  const regionCoord = [14.6043, 120.9946];
-  const [map, setMap] = useState(null);
-
-  function FlyToButton() {
-    const onClick = () => {
-      map.flyTo(regionCoord, zoom);
-      console.log(map);
-    };
-
-    return <button onClick={onClick}>Add marker on click</button>;
-  }
-  
   return (
     
     <div className="datatable">
-      <HeatMap/>
+    {/* <YourComponent updateMapCoordinates={updateMapCoordinates} /> */}
+    {/* <HeatMap users={userCoor} centerLat={mapCoordinates.latitude} centerLong={mapCoordinates.longitude} /> */}
+    {/* <HeatMap/> */}
+    {/* <HeatMap latitude={coordinates.latitude} longtitude={coordinates.longtitude} /> */}
+      <div>
+        <MapContainer 
+        ref={mapRef}
+        style={{ height: "420px", width: "100%" }}
+        zoom={defaultZoom}  
+        center={defaultCenter} 
+        >
+          <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+          {users.map((users) => {
+                return (
+                  //where to put center
+                  <CircleMarker
+                  // key={users.id}
+                    // key={_id}
+                     center={[users["latitude"], users["longtitude"]]}
+                     color={"red"}
+                    // radius={20 * Math.log(city["population"] / 10000000)}
+                    fillOpacity={0.7}
+                    stroke={false}>
+                  
+                    <Tooltip direction="top" offset={[5, 5]} opacity={5}>
+                    <div>
+                      <span>{"Name: "+users["firstName"]+ " " +users["lastName"] }</span>
+                    </div>
+                    <div>
+                      <span>{"ContactNo: "+users["contactNo"]}</span>
+                    </div>
+                    <div>
+                      <span>{"Site Transferred "+users["siteT"] }</span>
+                    </div>
+                    <div>
+                      <span>{"Age: "+users["age"] }</span>
+                    </div>
+                    <div>
+                      <span>{"Status: "+users["status"] }</span>
+                    </div>
+                      
+                    </Tooltip>
+                  </CircleMarker>
+                );
+              })}
+          </MapContainer>
+          {/* <div>
+            <HeatMap/>
+          </div> */}
       
+    </div>
     <div className="datatableTitle">
       Evacuees
       <Button onClick={handleClickOpen}   startIcon={<AddIcon/>} variant="contained" disableElevation> 
@@ -364,7 +421,8 @@ function List() {
             <TableCell align="center" className="tableCell">
             <Button align="center" variant="contained" size="small"  onClick={() =>viewPin(res.latitude,res.longtitude)}>View</Button>
             &nbsp; &nbsp; 
-            <Button align="center" variant="contained" color="error" size='small' onClick={openDelete}>Delete</Button>
+            <Button align="center" variant="contained" color="error" size='small' onClick={() => openDelete(res._id, res.firstName, res.lastName)}>Delete</Button>
+           
             <Dialog
               open={Dialogopen}
               onClose={closeDelete}
@@ -379,11 +437,14 @@ function List() {
                  Are you sure do you want to delete this? 
                 </DialogContentText>
               </DialogContent>
-              <DialogActions>
+             
+              <DialogActions key={res.id}>
                 <Button onClick={closeDelete}>Cancel</Button>
-                <Button onClick={() =>deleteRes(res.firstName, res.lastName)} autoFocus>Delete</Button>
+                <Button onClick={deleteRes} autoFocus>Delete</Button>
               </DialogActions>
+             
             </Dialog>
+
             </TableCell> 
           </TableRow>
         ))}

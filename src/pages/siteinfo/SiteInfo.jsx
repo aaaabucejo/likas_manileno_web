@@ -83,9 +83,9 @@ function SiteInfo() {
   //   console.log('has token')
   // }
 
-   const [users,setUsers] = useState([]);
-   const [rooms,setRooms] = useState([]);
-   const [locations,setLocations] = useState([]);
+  const [users,setUsers] = useState([]);
+  const [rooms,setRooms] = useState([]);
+  const [locations,setLocations] = useState([]);
 
   const[roomName,setRoomName] = useState("");
   const[name,setName] = useState(state ? state.name : '');
@@ -100,6 +100,15 @@ function SiteInfo() {
   const[groundrupture,setGroundRupture] = useState(state? state.groundrupture:'');
   const[flood,setFlood] = useState(state? state.flood:'');
 
+  //for displaying 
+  const[newName,setNewName] = useState(state ? state.name : '');
+  const[newCapacity,setNewCapacity] = useState(state ? state.capacity : '');
+  const[newTotalCap,setNewTotalCap]= useState(state ? state.totalevac : '');
+  const[newRoom,setNewRoom] = useState(state ? state.room : '');
+  
+  
+  const[selectedRoom,setSelectedRoom] = useState("");
+  
   
   
 
@@ -128,6 +137,7 @@ function SiteInfo() {
     .then(res => {
       console.log(res)
       setOpen(false);
+      window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
@@ -141,8 +151,9 @@ function SiteInfo() {
     setOpen(true);
   };
 
-  const openDelete = () => {
+  const openDelete = (_id) => {
     setDialogOpen(true);
+    setSelectedRoom(_id)
   };
 
 
@@ -200,16 +211,82 @@ function SiteInfo() {
 
   // const [userss,setUsers] = useState([]);
   useEffect(() => {
-      const fetchPosts = async () => {
-          axios.post('https://likasmanileno-api.onrender.com/app/getlocation')
-              .then(res => {
-                  // console.log(res.data);
-                  setLocations(res.data);
-              }).catch(err => {
+    const fetchPosts = async () => {
+      axios.post('https://likasmanileno-api.onrender.com/app/getLocation')
+        .then(resloc => {
+          setLocations(resloc.data);
+          axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
+            .then(resusers => {
+              // setUser(resusers.data)
+              //add axios.post here getRooms
+              axios.post('https://likasmanileno-api.onrender.com/app/getRooms')
+              .then(resrooms => {
+                // setRoom(resrooms.data);
+                // Process the rooms data as needed
+                const capCounter = [];
+                const roomCounter = [];
+                if(resloc.data.length > 0){
+                  resloc.data.forEach(loc => {
+                    let totalCapacity = 0; // Initialize totalCapacity to 0 for each location
+                    let totalRoom = 0;
+                    resrooms.data.forEach(room => {
+                      if(room.name == loc.name){
+                      totalCapacity += parseInt(room.capacity, 10);
+                      totalRoom++;    
+                      }
+                    });
+                    capCounter.push({ name: loc.name, capacity:totalCapacity }); 
+                    roomCounter.push({ name: loc.name, room: totalRoom });
+                  });
+                }
+                // console.log(capCounter)
+                // console.log(roomCounter)
+                for(let i = 0; i < capCounter.length; i++){
+                  axios.post('https://likasmanileno-api.onrender.com/app/updateLocationCapacity',capCounter[i])
+                  .then(rescap=>{
+                    // console.log(rescap)
+                  });
+                }
+                for(let i = 0; i < capCounter.length; i++){
+                axios.post('https://likasmanileno-api.onrender.com/app/updateRoomCount', roomCounter[i])
+                  .then(resroom => {
+
+                  });
+                }
+                 })
+                 
+                .catch(err => {
                   console.log(err);
-              })
-      };
-      fetchPosts();
+               });
+              
+              const newArr = []
+              if (resloc.data.length > 0) {
+                // console.log(resloc.data.length)            
+                for (let i = 0; i < resloc.data.length; i++) {
+                const getCap = resusers.data.filter((tl)=>tl.name == resloc.data[i].name).length
+                newArr.push({name:resloc.data[i].name,totalevac:getCap})  
+                // console.log(newArr)                          
+                } 
+                for (let i = 0; i < newArr.length; i++) {
+                  axios.post('https://likasmanileno-api.onrender.com/app/updateLocationTotal',newArr[i])
+                     .then(restotal =>{
+                    // console.log(rescap)
+                    // console.log(resloc.data)
+                  }).catch(err =>{
+                    console.log(err)
+                  })
+                }
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    };
+    fetchPosts();
   }, []);
 
 
@@ -280,17 +357,14 @@ function SiteInfo() {
   
   }
 
-  const deleteRoom=(roomName) =>{
+  const deleteRoom=() =>{
 
-    const data = {
-      name:name,
-      roomName: roomName,      
-    }
-    console.log(data)
-    axios.post('https://likasmanileno-api.onrender.com/app/deleteroom',data)
+    
+    axios.post('https://likasmanileno-api.onrender.com/app/deleteroom',selectedRoom)
     .then(res => {
       if(res.data != null){
       setDialogOpen(false);
+      window.location.reload();
       }
     }).catch((res) =>{
       console.log(res)
@@ -343,15 +417,16 @@ function SiteInfo() {
       flood: flood,
       groundrupture: groundrupture
     }
-    
+    console.log(data)
     axios.post('https://likasmanileno-api.onrender.com/app/updateLocation',data)
     .then(res => {
       console.log(res)
       setOpenEditHotline(false);
+      window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
-    console.log([data])
+   
   }
 
 
@@ -377,7 +452,7 @@ function dividedRoom() {
         <Chip icon={<GroupIcon />} label={`${rooms.totalcap} / ${rooms.capacity}`} style={{alignItems:"center," ,padding:"10pt",fontWeight:"600"}}/>
         &nbsp;
         
-       <Button variant="contained" size='small'  color={colorRoom} disabled={isButtonDisabledRoom} onClick={openDelete}>Remove</Button>
+       <Button variant="contained" size='small'  color={colorRoom} disabled={isButtonDisabledRoom} onClick={() =>openDelete(rooms._id)}>Remove</Button>
            
        <Dialog
               open={Dialogopen}
@@ -397,7 +472,7 @@ function dividedRoom() {
 
                 <Button onClick={closeDelete}>Cancel</Button>
                 
-                <Button onClick={() =>deleteRoom(rooms.roomName)} autoFocus>Delete</Button>           
+                <Button onClick={deleteRoom} autoFocus>Delete</Button>           
               </DialogActions>
             </Dialog>
 
@@ -489,15 +564,7 @@ function dividedRoom() {
                 </DialogContentText>
                 <br/>
                 
-                <div className="editImage" style={{display:'flex', alignItems:'center', paddingBottom:'3pt'}}>
-                <Avatar sx={{ bgcolor: deepOrange[500] }} variant="square">
-                  NU
-                </Avatar>
-                <Button style={{display:'flex', marginLeft:'5pt'}} variant="outlined"  size="medium" component="label">
-                  Upload
-                  <input hidden accept="image/*" multiple type="file" />
-                </Button>
-                </div>
+                
                 
                 {/* <TextField
                   autoFocus
@@ -602,47 +669,59 @@ function dividedRoom() {
             </Dialog>
             ))}
            
-          
 
-            <div className="indi">
-              <img src="https://national-u.edu.ph/wp-content/uploads/2021/04/banner-nu-manila.jpg"
-               alt="" className="indiImg" />
-               <div className="details">
-                 <h1 className="indiTitle">{name}</h1>
-                 <div className="detailIndi">
-                   <span className="infoKey">Address:</span>
-                   <span className="infoValue">address</span>
-                 </div>
-                 <div className="detailIndi">
-                   <span className="infoKey">Capacity:</span>
-                   <span className="infoValue">500</span>
-                 </div>
-                 <div className="detailIndi">
-                   <span className="infoKey">Rooms:</span>
-                   <span className="infoValue">5000</span>
-                 </div>
-                 <div className="detailIndi">
-                   <span className="infoKey">Restrooms:</span>
-                   <span className="infoValue">45</span>
-                 </div>
-                 <div className="detailIndi">
-                   <span className="infoKey">Kitchens:</span>
-                   <span className="infoValue">10</span>
-                 </div>
-                 <div className="detailIndi">
-                   <span className="infoKey">Emergency Vehicles:</span>
-                   <span className="infoValue">Ready</span>
-                 </div>
-                 <div className="detailIndi">
-                   <span className="infoKey">First Aids:</span>
-                   <span className="infoValue">Ready</span>
-                 </div>
-                 <div className="detailIndi">
-                   <span className="infoKey">Officials:</span>
-                   <span className="infoValue">300</span>
-                 </div>
-               </div>
+           <div>
+  {locations.map(location => {
+    if (location.name === newName) {
+      return (
+        <div className="indi" key={location.id}>
+          <img
+            src="https://national-u.edu.ph/wp-content/uploads/2021/04/banner-nu-manila.jpg"
+            alt=""
+            className="indiImg"
+          />
+          <div className="details">
+            <h1 className="indiTitle">{newName}</h1>
+            <div className="detailIndi">
+              <span className="infoKey">Address:</span>
+              <span className="infoValue">{location.address}</span>
             </div>
+            <div className="detailIndi">
+              <span className="infoKey">Residents:</span>
+              <span className="infoValue">{location.totalevac}</span>
+            </div>
+            <div className="detailIndi">
+              <span className="infoKey">Capacity:</span>
+              <span className="infoValue">{location.capacity}</span>
+            </div>
+            <div className="detailIndi">
+              <span className="infoKey">Rooms:</span>
+              <span className="infoValue">{location.room}</span>
+            </div>
+            <div className="detailIndi">
+              <span className="infoKey">Restroom:</span>
+              <span className="infoValue">{location.restroom}</span>
+            </div>
+            <div className="detailIndi">
+              <span className="infoKey">Kitchen:</span>
+              <span className="infoValue">{location.kitchen}</span>
+            </div>
+            <div className="detailIndi">
+              <span className="infoKey">Flood:</span>
+              <span className="infoValue">{location.flood}</span>
+            </div>
+            <div className="detailIndi">
+              <span className="infoKey">Ground Rupture:</span>
+              <span className="infoValue">{location.groundrupture}</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  })}
+</div>
+
           </div>
         </div>
         

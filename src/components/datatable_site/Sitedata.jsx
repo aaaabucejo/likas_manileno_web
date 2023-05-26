@@ -129,7 +129,7 @@ function Sitedata(props) {
     //database
     const [locations,setLocations] = useState([]);
     const [users,setUser] = useState([]);
-
+    const[selectedLocation,setSelectedLocation] = useState("");
     
           // 2 axios
           useEffect(() => {
@@ -180,8 +180,7 @@ function Sitedata(props) {
                         .catch(err => {
                           console.log(err);
                        });
-                      // console.log(resloc.data)
-                      // console.log(resusers.data)
+                      
                       const newArr = []
                       if (resloc.data.length > 0) {
                         // console.log(resloc.data.length)            
@@ -238,6 +237,7 @@ function Sitedata(props) {
       .then(res => {
         console.log(res.data)
         setOpen(false);
+        window.location.reload();
       }).catch(err =>{
         console.log(err)
         
@@ -257,8 +257,9 @@ function Sitedata(props) {
     
   }
 
-  const openDelete = () => {
+  const openDelete = (_id) => {
     setDialogOpen(true);
+    setAddress({_id})
   };
 
   const closeDelete = () => {
@@ -274,17 +275,14 @@ function Sitedata(props) {
   };
 
   
-  const deleteAdd=(address) =>{
-    const data = {
-      address:address           
-    }
-    
-    // console.log(data)
-    axios.post('https://likasmanileno-api.onrender.com/app/deletelocation',data)
+  const deleteAdd=() =>{
+
+    axios.post('https://likasmanileno-api.onrender.com/app/deletelocation',selectedLocation)
     .then(res => {
       if(res.data != null){
         // alert("deleted")
         setDialogOpen(false);
+        window.location.reload();
       }
     }).catch((res) =>{
       console.log(res)
@@ -594,7 +592,7 @@ function Sitedata(props) {
               res.flood,
               res.groundrupture,
               )}>View</Button>
-            <Button size="small" variant="contained" color="error" onClick={openDelete}>Delete</Button>
+            <Button size="small" variant="contained" color="error" onClick={()=> openDelete(res._id)}>Delete</Button>
             <Dialog
               open={Dialogopen}
               onClose={closeDelete}
@@ -614,7 +612,7 @@ function Sitedata(props) {
                 <Button onClick={closeDelete}>Cancel</Button>
                 {/* <Button onClick={closeDelete} autoFocus> */}
                 
-                <Button onClick={() =>deleteAdd(res.address)} autoFocus>Delete</Button>           
+                <Button onClick={deleteAdd} autoFocus>Delete</Button>           
               </DialogActions>
             </Dialog>
             </TableCell> 

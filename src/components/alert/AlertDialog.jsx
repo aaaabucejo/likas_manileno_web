@@ -8,7 +8,7 @@ function AlertDialog() {
     <div className='AlertDIalog'>
     <Stack sx={{ width: '100%' }} spacing={2}>
     <Alert variant="filled" severity="error">
-    incorrect username or password
+    incorrect credentials
     </Alert>
   </Stack>
   </div>
