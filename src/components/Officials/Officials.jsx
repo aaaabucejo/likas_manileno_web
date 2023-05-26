@@ -88,7 +88,7 @@ function Officials() {
     .then(res => {
       // console.log(res)
       setOpen(false);
-      window.location.reload();
+      // window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
@@ -115,7 +115,7 @@ function Officials() {
     .then(res => {
       if(res.data != null){
         setDialogOpen(false);
-        window.location.reload();
+        // window.location.reload();
       }
     }).catch((res) =>{
       console.log(res)
@@ -165,8 +165,8 @@ function Officials() {
     axios.post('https://likasmanileno-api.onrender.com/app/updateofficials',data)
     .then(res => {
       console.log(res)
-      // setOpenEditHotline(false);
-      window.location.reload();
+      setOpenEditHotline(false);
+      // window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })

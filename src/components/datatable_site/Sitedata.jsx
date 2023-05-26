@@ -237,7 +237,7 @@ function Sitedata(props) {
       .then(res => {
         console.log(res.data)
         setOpen(false);
-        window.location.reload();
+        // window.location.reload();
       }).catch(err =>{
         console.log(err)
         
@@ -282,7 +282,7 @@ function Sitedata(props) {
       if(res.data != null){
         // alert("deleted")
         setDialogOpen(false);
-        window.location.reload();
+        // window.location.reload();
       }
     }).catch((res) =>{
       console.log(res)
