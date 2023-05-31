@@ -134,7 +134,7 @@ function Sitedata(props) {
           // 2 axios
           useEffect(() => {
             const fetchPosts = async () => {
-              axios.post('http://localhost:4000/app/getLocation')
+              axios.post('https://likasmanileno-api.onrender.com/app/getLocation')
                 .then(resloc => {
                   setLocations(resloc.data);
                   axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
@@ -257,9 +257,9 @@ function Sitedata(props) {
     
   }
 
-  const openDelete = (_id) => {
+  const openDelete = (_id,name,address) => {
     setDialogOpen(true);
-    setAddress({_id})
+    setSelectedLocation({_id,name,address})
   };
 
   const closeDelete = () => {
@@ -592,7 +592,7 @@ function Sitedata(props) {
               res.flood,
               res.groundrupture,
               )}>View</Button>
-            <Button size="small" variant="contained" color="error" onClick={()=> openDelete(res._id)}>Delete</Button>
+            <Button size="small" variant="contained" color="error" onClick={()=> openDelete(res._id,res.name,res.address)}>Delete</Button>
             <Dialog
               open={Dialogopen}
               onClose={closeDelete}

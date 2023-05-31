@@ -73,7 +73,7 @@ function Hotlinetable() {
     .then(res => {
       console.log(res)
       setOpenEditHotline(false);
-      // window.location.reload();
+      window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
@@ -109,7 +109,7 @@ function Hotlinetable() {
     .then(res => {
       console.log(res)
       setOpen(false);
-      // window.location.reload();
+      window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
@@ -145,7 +145,7 @@ function Hotlinetable() {
     axios.post('https://likasmanileno-api.onrender.com/app/deletehotline',selectedHotline)
     .then(res => {
       setDialogOpen(false);
-      // window.location.reload();
+      window.location.reload();
       // console.log('deleted successful')
     }).catch((res) =>{
       console.log(res)
