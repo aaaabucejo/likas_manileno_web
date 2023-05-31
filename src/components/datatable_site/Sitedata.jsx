@@ -134,7 +134,7 @@ function Sitedata(props) {
           // 2 axios
           useEffect(() => {
             const fetchPosts = async () => {
-              axios.post('https://likasmanileno-api.onrender.com/app/getLocation')
+              axios.post('http://localhost:4000/app/getLocation')
                 .then(resloc => {
                   setLocations(resloc.data);
                   axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
@@ -231,13 +231,13 @@ function Sitedata(props) {
         flood: flood,
         groundrupture: groundrupture
       }
-      // console.log(data)
+      console.log(data)
       //dito ma sasave ng database
       axios.post('https://likasmanileno-api.onrender.com/app/signuplocation',data)
       .then(res => {
         console.log(res.data)
         setOpen(false);
-        // window.location.reload();
+        window.location.reload();
       }).catch(err =>{
         console.log(err)
         
@@ -282,7 +282,7 @@ function Sitedata(props) {
       if(res.data != null){
         // alert("deleted")
         setDialogOpen(false);
-        // window.location.reload();
+        window.location.reload();
       }
     }).catch((res) =>{
       console.log(res)
@@ -317,7 +317,7 @@ function Sitedata(props) {
             Fill out the form below with the exact Inofrmation of the Evacuation Site.
           </DialogContentText>
           
-          <TextField
+          {/* <TextField
             autoFocus
             margin="dense"
             id="name"
@@ -325,16 +325,16 @@ function Sitedata(props) {
             fullWidth
             onChange={(e) => setName(e.target.value)}
             style={{paddingBottom:"6pt"}}
-          />
+          /> */}
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex" }}>
         <div style={{ flex: 1,}}>
           <OutlinedInput
           placeholder='Search Address'
             style={{ width: "100%" }}
-            value={searchText}
+            value={name}
             onChange={(event) => {
-              setSearchText(event.target.value);
+              setName(event.target.value);
             }}
           />
         </div>
@@ -349,7 +349,7 @@ function Sitedata(props) {
             onClick={() => {
               // Search
               const params = {
-                q: searchText,
+                q: name,
                 format: "json",
                 addressdetails: 1,
                 polygon_geojson: 0,

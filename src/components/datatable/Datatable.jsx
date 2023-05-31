@@ -163,11 +163,11 @@ function List() {
   const deleteRes=() =>{
 
     console.log(selectedUser)
-    axios.post('http://localhost:4000/app/deleteresident',selectedUser)
+    axios.post('https://likasmanileno-api.onrender.com/app/deleteresident',selectedUser)
     .then(res => {
       if(res.data != null){
       setDialogOpen(false);
-      // window.location.reload();
+      window.location.reload();
       }
     }).catch((res) =>{
       console.log(res)
