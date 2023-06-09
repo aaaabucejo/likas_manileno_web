@@ -108,7 +108,7 @@ function SiteInfo() {
   const[newRoom,setNewRoom] = useState(state ? state.room : '');
 
   const[selectedRoom,setSelectedRoom] = useState("");
-  
+  const[selectedAddResRoom,setSelectedAddResRoom] = useState("");
   
   
 
@@ -157,11 +157,12 @@ function SiteInfo() {
 
   const openDelete = (_id,roomName) => {
     setDialogOpen(true);
-    setSelectedRoom({_id,roomName: 'Removed'})
+    setSelectedRoom({_id,roomName})
   };
 
-  const openAddResidentDialog = (e) => {
+  const openAddResidentDialog = (roomName) => {
     setAddResidentDialog(true);
+    setSelectedAddResRoom(roomName)
   };
 
   function addResBtnDisable(){
@@ -180,7 +181,7 @@ function SiteInfo() {
 
     const data = {
       username: username,
-      roomName: roomName
+      roomName: selectedAddResRoom
       
     }
     const foundUser = users.find(user => user.username === data.username && user.roomName === "Removed");
@@ -198,6 +199,8 @@ function SiteInfo() {
       axios.post('https://likasmanileno-api.onrender.com/app/addUsersToRoom',data)
     .then(res => {
       console.log(res)
+      window.location.reload();
+
     }).catch((res) =>{
       console.log(res)
     })
@@ -424,7 +427,8 @@ function SiteInfo() {
     console.log(data)
     axios.post('https://likasmanileno-api.onrender.com/app/updateUsers',data)
     .then(res => {
-      
+      window.location.reload();
+ 
     }).catch((res) =>{
       console.log(res)
     })
@@ -530,7 +534,7 @@ function dividedRoom() {
         
        <Button variant="contained" size='small'  color={colorRoom} disabled={isButtonDisabledRoom} onClick={() =>openDelete(rooms._id,rooms.roomName)}>Remove</Button>
        &nbsp;&nbsp;
-       <Button variant="contained" size='small'  color={fullRoom} disabled={isButtonDisabledFullRoom} onClick={openAddResidentDialog}>Add Resident</Button>
+       <Button variant="contained" size='small'  color={fullRoom} disabled={isButtonDisabledFullRoom} onClick={()=>openAddResidentDialog(rooms.roomName)}>Add Resident</Button>
            
        <Dialog
               open={Dialogopen}
@@ -617,6 +621,7 @@ function dividedRoom() {
               <TableCell className="tableCell">{res.inoutStatus}</TableCell>
               <TableCell className="tableCell">
               <Button variant="contained" size="small" color="error" onClick={() => removeRes(res._id,res.firstName)}>Delete</Button>
+              &nbsp;&nbsp;
               <Button  variant="contained" size="small" onClick={handleEditOpen}>Edit</Button>
               </TableCell>
               <Dialog open={openEditHotline} onClose={handleEditClose}>
