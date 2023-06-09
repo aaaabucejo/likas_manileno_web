@@ -91,8 +91,9 @@ function SiteInfo() {
   const[name,setName] = useState(state ? state.name : '');
   const[totalcap,setTotalCap] = useState('0');
   const[capacity,setCapacity] = useState("");
-
+  const[username,setUsername] = useState("");
   
+
   const[id,setId] = useState(state? state._id:'');
   const[address,setAddress] = useState(state? state.address:'');
   const[restroom,setRestRoom] = useState(state? state.restroom:'');
@@ -105,20 +106,22 @@ function SiteInfo() {
   const[newCapacity,setNewCapacity] = useState(state ? state.capacity : '');
   const[newTotalCap,setNewTotalCap]= useState(state ? state.totalevac : '');
   const[newRoom,setNewRoom] = useState(state ? state.room : '');
-  
-  
+
   const[selectedRoom,setSelectedRoom] = useState("");
   
   
   
 
-  
+  const [userNameChecker, setUserNameChecker] = React.useState(false);
+  const [userHasRoom, setUserHasRoom] = React.useState(false);
+  const [fullRoom, setFullRoom] = React.useState(false);
 
   const [open, setOpen] = React.useState(false);
   
   const [Dialogopen, setDialogOpen] = React.useState(false);
   const [Editopen, setEditOpen] = React.useState(false);
-
+  const [addResidentDialog, setAddResidentDialog] = React.useState(false);
+  const [userNotExist, setUserNotExist] = React.useState(false);
   const status = [
     { label: 'In', },{ label: 'Out', },
   ];
@@ -145,38 +148,103 @@ function SiteInfo() {
 
   const handleClose = () => {
     setOpen(false);
+    setAddResidentDialog(false);
   };
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const openDelete = (_id) => {
+  const openDelete = (_id,roomName) => {
     setDialogOpen(true);
-    setSelectedRoom(_id)
+    setSelectedRoom({_id,roomName: 'Removed'})
   };
 
-
-  const handleClickOpenEdit = () => {
-    setDialogOpen(true);
+  const openAddResidentDialog = (e) => {
+    setAddResidentDialog(true);
   };
 
-  const handleCloseEdit = () => {
-    setDialogOpen(false);
-  };
-
-  const openRoomEdit = () => {
-    setDialogOpen(true);
-  };
-
-  const closeDelete = () => {
-    setDialogOpen(false);
-  };
-  const deleteAdd=(address) =>{
-    const data = {
-      address:address           
+  function addResBtnDisable(){
+    if(
+      username == '' 
+     ){
+      return true
+      
+    }else{
+      return false
     }
   }
+
+
+  const addResManual=(roomName) =>{
+
+    const data = {
+      username: username,
+      roomName: roomName
+      
+    }
+    const foundUser = users.find(user => user.username === data.username && user.roomName === "Removed");
+    
+    const userHasRoom = users.find(user => user.username === data.username && user.roomName != "Removed")
+    if (!users.some(user => user.username === data.username)) {
+      setUserNameChecker(true)
+      setUserNotExist(true)
+    } else if (userHasRoom) {
+      setUserNameChecker(true);
+      setUserHasRoom(true)
+
+    } else {
+      // console.log(data)
+      axios.post('https://likasmanileno-api.onrender.com/app/addUsersToRoom',data)
+    .then(res => {
+      console.log(res)
+    }).catch((res) =>{
+      console.log(res)
+    })
+ 
+     
+    }
+  };
+
+  function fullRoomChecker(rooms){
+    if(rooms.totalcap == rooms.capacity){
+      return {
+        fullRoom:'primary',
+        isButtonDisabledFullRoom: true
+      }
+    }else{
+      return {
+        fullRoom:'primary',
+        isButtonDisabledFullRoom: false
+      }
+    }
+  }
+// axios.post('http://localhost:4000/app/updateUsers',data)
+    // .then(res => {
+      
+    // }).catch((res) =>{
+    //   console.log(res)
+    // })
+  // const handleCloseEdit = () => {
+  //   setDialogOpen(false);
+  // };
+
+  // const openRoomEdit = () => {
+  //   setDialogOpen(true);
+  // };
+
+  // const deleteAdd=(address) =>{
+  //   const data = {
+  //     address:address           
+  //   }
+  // }
+
+  
+  const closeDelete = () => {
+    setDialogOpen(false);
+    setAddResidentDialog(false);
+  };
+  
 
   const groundRuptureSelect = [
     {
@@ -206,86 +274,96 @@ function SiteInfo() {
    
   ];
 
-  
-
+                // addResToRoom({id:user.id,email:user.email,roomName:user.roomName})
+                  // console.log(addResToRoom)
+                  // addResToRoom.push({ id: user._id, username: user.username, roomName: user.roomName });
+// const usersWithEmptyName = resusers.data.filter(user => user.roomName === '');
 
   // const [userss,setUsers] = useState([]);
   useEffect(() => {
     const fetchPosts = async () => {
-      axios.post('https://likasmanileno-api.onrender.com/app/getLocation')
-        .then(resloc => {
-          setLocations(resloc.data);
-          axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
-            .then(resusers => {
-              // setUser(resusers.data)
-              //add axios.post here getRooms
-              axios.post('https://likasmanileno-api.onrender.com/app/getRooms')
-              .then(resrooms => {
-                // setRoom(resrooms.data);
-                // Process the rooms data as needed
-                const capCounter = [];
-                const roomCounter = [];
-                if(resloc.data.length > 0){
-                  resloc.data.forEach(loc => {
-                    let totalCapacity = 0; // Initialize totalCapacity to 0 for each location
-                    let totalRoom = 0;
-                    resrooms.data.forEach(room => {
-                      if(room.name == loc.name){
-                      totalCapacity += parseInt(room.capacity, 10);
-                      totalRoom++;    
-                      }
-                    });
-                    capCounter.push({ name: loc.name, capacity:totalCapacity }); 
-                    roomCounter.push({ name: loc.name, room: totalRoom });
-                  });
-                }
-                // console.log(capCounter)
-                // console.log(roomCounter)
-                for(let i = 0; i < capCounter.length; i++){
-                  axios.post('https://likasmanileno-api.onrender.com/app/updateLocationCapacity',capCounter[i])
-                  .then(rescap=>{
-                    // console.log(rescap)
-                  });
-                }
-                for(let i = 0; i < capCounter.length; i++){
-                axios.post('https://likasmanileno-api.onrender.com/app/updateRoomCount', roomCounter[i])
-                  .then(resroom => {
-
-                  });
-                }
-                 })
-                 
-                .catch(err => {
-                  console.log(err);
-               });
-              
-              const newArr = []
-              if (resloc.data.length > 0) {
-                // console.log(resloc.data.length)            
-                for (let i = 0; i < resloc.data.length; i++) {
-                const getCap = resusers.data.filter((tl)=>tl.name == resloc.data[i].name).length
-                newArr.push({name:resloc.data[i].name,totalevac:getCap})  
-                // console.log(newArr)                          
-                } 
-                for (let i = 0; i < newArr.length; i++) {
-                  axios.post('https://likasmanileno-api.onrender.com/app/updateLocationTotal',newArr[i])
-                     .then(restotal =>{
-                    // console.log(rescap)
-                    // console.log(resloc.data)
-                  }).catch(err =>{
-                    console.log(err)
-                  })
-                }
-              }
-            })
-            .catch(err => {
-              console.log(err);
-            });
-        })
-        .catch(err => {
-          console.log(err);
+      try {
+        const resloc = await axios.post('https://likasmanileno-api.onrender.com/app/getLocation');
+        setLocations(resloc.data);
+  
+        const resusers = await axios.post('https://likasmanileno-api.onrender.com/app/getUsers');
+        const resrooms = await axios.post('https://likasmanileno-api.onrender.com/app/getRooms');
+  
+        const capCounter = [];
+        const roomCounter = [];
+        const addResToRoom = [];
+        const removeExtraRes = [];
+  
+        let selectedRoom = null;
+        const usersWithEmptyName = resusers.data.filter(user => user.roomName === '');
+        resrooms.data.forEach(room => {
+          if (room.name === newName && room.totalcap < room.capacity) {
+            if (!selectedRoom) {
+              selectedRoom = room;
+            }
+          }
         });
+  
+        if (selectedRoom) {
+          const addAllRes = resusers.data.filter(user => user.roomName === '' || user.roomName === selectedRoom.roomName);
+          const availableSlot = selectedRoom.capacity - selectedRoom.totalcap;
+  
+          if (availableSlot !== 0) {
+            const unnamedUsers = addAllRes.filter(user => user.roomName === '');
+            const usersToAdd = Math.min(unnamedUsers.length, availableSlot);
+  
+            for (let i = 0; i < usersToAdd; i++) {
+              addResToRoom.push({
+                id: unnamedUsers[i]._id,
+                username: unnamedUsers[i].username,
+                roomName: selectedRoom.roomName
+              });
+            }
+          }
+        }
+  
+        if (resloc.data.length > 0) {
+          resloc.data.forEach(loc => {
+            let totalCapacity = 0;
+            let totalRoom = 0;
+  
+            resrooms.data.forEach(room => {
+              if (room.name === loc.name) {
+                totalCapacity += parseInt(room.capacity, 10);
+                totalRoom++;
+              }
+            });
+  
+            capCounter.push({ name: loc.name, capacity: totalCapacity });
+            roomCounter.push({ name: loc.name, room: totalRoom });
+          });
+        }
+  
+        for (let i = 0; i < addResToRoom.length; i++) {
+          await axios.post('https://likasmanileno-api.onrender.com/app/addToRoom', addResToRoom[i]);
+        }
+  
+        for (let i = 0; i < roomCounter.length; i++) {
+          await axios.post('https://likasmanileno-api.onrender.com/app/updateRoomCount', roomCounter[i]);
+        }
+  
+        const newArr = [];
+  
+        if (resloc.data.length > 0) {
+          for (let i = 0; i < resloc.data.length; i++) {
+            const getCap = resusers.data.filter(tl => tl.name === resloc.data[i].name).length;
+            newArr.push({ name: resloc.data[i].name, totalevac: getCap });
+          }
+  
+          for (let i = 0; i < newArr.length; i++) {
+            await axios.post('https://likasmanileno-api.onrender.com/app/updateLocationTotal', newArr[i]);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
     };
+  
     fetchPosts();
   }, []);
 
@@ -310,9 +388,6 @@ function SiteInfo() {
               if (resrooms.data.length > 0) {
                  
                 for (let i = 0; i < resrooms.data.length; i++) {
-
-                  //room na name==jacinto && roomName == 401
-
                 const getCap = resusers.data.filter((tl)=>tl.name === resrooms.data[i].name && tl.roomName === resrooms.data[i].roomName).length
                 newArr.push({name:resrooms.data[i].name,roomName:resrooms.data[i].roomName,totalcap:getCap})
                 //  console.log(newArr)                         
@@ -339,18 +414,17 @@ function SiteInfo() {
     fetchPosts();
   }, []);
 
-  const deleteRes=(firstName, lastName) =>{
+  const removeRes=(_id,firstName) =>{
 
     const data = {
+      _id: _id,
       firstName: firstName,
-      lastName: lastName,      
+      roomName: 'Removed'
     }
     console.log(data)
-    axios.post('https://likasmanileno-api.onrender.com/app/deleteresident',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/updateUsers',data)
     .then(res => {
-      if(res.data != null){
-      setDialogOpen(false);
-      }
+      
     }).catch((res) =>{
       console.log(res)
     })
@@ -359,13 +433,14 @@ function SiteInfo() {
 
   const deleteRoom=() =>{
 
-    
+    // console.log(selectedRoom)
     axios.post('https://likasmanileno-api.onrender.com/app/deleteroom',selectedRoom)
     .then(res => {
-      if(res.data != null){
+      
       setDialogOpen(false);
+      console.log(selectedRoom)
       window.location.reload();
-      }
+      
     }).catch((res) =>{
       console.log(res)
     })
@@ -422,7 +497,7 @@ function SiteInfo() {
     .then(res => {
       console.log(res)
       setOpenEditHotline(false);
-      window.location.reload();
+      // window.location.reload();
     }).catch((res) =>{
       console.log(res)
     })
@@ -443,6 +518,7 @@ function dividedRoom() {
     if (rooms.name === name) {
      //users.name == rooms.name || users.roomName == rooms.roomName
      const { colorRoom, isButtonDisabledRoom } = checkRoomIsEmpty(rooms);
+     const { fullRoom, isButtonDisabledFullRoom } = fullRoomChecker(rooms);
       newArr.push(
         <TableContainer component={Paper} className="table">
         <div style={{display:"flex", paddingTop:"10pt", paddingLeft:"10pt", padding:"10px" , justifyContent:"flex-between"}}>
@@ -452,13 +528,20 @@ function dividedRoom() {
         <Chip icon={<GroupIcon />} label={`${rooms.totalcap} / ${rooms.capacity}`} style={{alignItems:"center," ,padding:"10pt",fontWeight:"600"}}/>
         &nbsp;
         
-       <Button variant="contained" size='small'  color={colorRoom} disabled={isButtonDisabledRoom} onClick={() =>openDelete(rooms._id)}>Remove</Button>
+       <Button variant="contained" size='small'  color={colorRoom} disabled={isButtonDisabledRoom} onClick={() =>openDelete(rooms._id,rooms.roomName)}>Remove</Button>
+       &nbsp;&nbsp;
+       <Button variant="contained" size='small'  color={fullRoom} disabled={isButtonDisabledFullRoom} onClick={openAddResidentDialog}>Add Resident</Button>
            
        <Dialog
               open={Dialogopen}
               onClose={closeDelete}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
+              BackdropProps={{
+                style: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.15)', // Adjust the last value (0.5) to change the opacity
+                },
+              }}
             >
               <DialogTitle id="alert-dialog-title">
                 {"Delete this user?"}
@@ -476,7 +559,47 @@ function dividedRoom() {
               </DialogActions>
             </Dialog>
 
+            <Dialog
+              open={addResidentDialog}
+              onClose={closeDelete}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              BackdropProps={{
+                style: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.20)', // Adjust the last value (0.5) to change the opacity
+                },
+              }}
+            >
+              <DialogTitle id="alert-dialog-title">
+                {`Add resident in ${rooms.roomName}`}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  
+                <TextField
+                  autoFocus
+                  error = {userNameChecker}
+                  margin="dense"
+                  id="username"
+                  label={userNotExist? 'Username does not exist': userHasRoom? 'The user has a room already.':'Username'}
+                  fullWidth
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                 
+                
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+
+                <Button onClick={handleClose} variant="contained">Cancel</Button>
+                
+                <Button disabled={addResBtnDisable()} onClick={()=>addResManual(rooms.roomName)}  variant="outlined">ADD</Button>
+          
+              </DialogActions>
+            </Dialog>
           </div>
+
+        
           <Table >  
             <TableHead className="tablehead"  >
               <TableRow className="rowColor">
@@ -493,7 +616,7 @@ function dividedRoom() {
               <TableCell className="tableCell">{res.lastName}</TableCell>
               <TableCell className="tableCell">{res.inoutStatus}</TableCell>
               <TableCell className="tableCell">
-              <Button variant="contained" size="small" color="error" onClick={() => deleteRes(res.firstName,res.lastName)}>Delete</Button>
+              <Button variant="contained" size="small" color="error" onClick={() => removeRes(res._id,res.firstName)}>Delete</Button>
               <Button  variant="contained" size="small" onClick={handleEditOpen}>Edit</Button>
               </TableCell>
               <Dialog open={openEditHotline} onClose={handleEditClose}>

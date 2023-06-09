@@ -69,38 +69,13 @@ function Login() {
   const errRef = useRef();
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
+
   const navigate = useNavigate()
-  const [formErrors, setFormErrors] = useState({});
+
+
 
   const handleButton = () =>{
-   
-    //regex forms
-    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    const regexLetterOnly = /^[a-zA-Z ]*$/;
-    const regexNumberOnly = /^[0-9\b]+$/;
-
-    const data = {
-      email: email,
-      passWord: passWord,
-      firstName: firstName,
-      lastName: lastName,
-      contact: contact,
-      age: age,
-    }
-    
-    if(data.email == '' || data.passWord == '' || data.firstName == '' || data.lastName == '' || data.contact == '' || data.age == ''){
-      setFillUpConfirm(true);
-    }else if(!regexEmail.test(data.email)){
-      setInvalidEmailAdd(true);
-    }else if(data.passWord.length< 4){
-      setPassMore(true);
-    }else if(data.passWord.length>8){
-      setPassLess(true);
-    }else if(!regexLetterOnly.test(data.firstName) || !regexLetterOnly.test(data.lastName)){
-      setInvalidName(true);
-    }else if(!regexNumberOnly.test(data.contact) || data.contact.length < 11 || data.contact.length > 11){
-      setInvalidContact(true);
-    }else{     
+     
       const data = {
         email: email,
         passWord: passWord,
@@ -109,8 +84,7 @@ function Login() {
         contact: contact,
         age: age,
       }
-    //dito ma sasave ng database
-    axios.post('https://likasmanileno-api.onrender.com/app/signupofficials',data)
+   axios.post('https://likasmanileno-api.onrender.com/app/signupofficials',data)
     .then(res => {
       console.log(res)
       setOpen(false);
@@ -118,8 +92,89 @@ function Login() {
     }).catch((res) =>{
       console.log(res)
     })
-   } 
+   
   }
+
+   
+
+  
+  function isButtonDisable(){
+    if(
+      email == '' || 
+      passWord == '' || 
+      firstName == '' || 
+      lastName == '' ||
+      contact == '' ||
+      age == '' ||
+      emailChecker() || 
+      passwordChecker()||
+      firstNameChecker()||
+      lastNameChecker()||
+      contactChecker()){
+      return true
+      
+    }else{
+      return false
+    }
+  }
+
+  function emailChecker(){
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+   if(email != ''){
+      if(!regexEmail.test(email)){
+        return true;
+      }
+   }else{
+    return false;
+   }
+  }
+
+  function passwordChecker(){
+    if(passWord != ''){
+      if(passWord.length<4){
+        return true;
+      }else if(passWord.length>8){
+        return true;
+      }
+    }else{
+      return false
+    }
+  }
+
+  function firstNameChecker(){
+    const regexLetterOnly = /^[a-zA-Z ]*$/;
+    if(firstName !=''){
+      if(!regexLetterOnly.test(firstName)){
+        return true;
+      }
+    }else{
+      return false;
+    }
+  }
+
+   function lastNameChecker(){
+    const regexLetterOnly = /^[a-zA-Z ]*$/;
+    if(lastName !=''){
+      if(!regexLetterOnly.test(lastName)){
+        return true;
+      }
+    }else{
+      return false;
+    }
+  }
+
+  function contactChecker(){
+    const regexNumberOnly = /^[0-9\b]+$/;
+    if(contact !=''){
+      if(!regexNumberOnly.test(contact)|| contact.length < 11 || contact.length > 11 ){
+        return true
+      }
+    }else{
+      return false;
+    }
+  }
+
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -146,7 +201,6 @@ function Login() {
         navigate('/')
          localStorage.setItem('token',res.data.token)
          console.log(res.data)
-         console.log('test')
          
       } else if (res.data.status == 'incorrect username or password'){
         message = res.data.status;
@@ -158,6 +212,9 @@ function Login() {
       console.log(res)
     })
   }
+
+
+  
 
   useEffect(() => {
     userRef.current.focus();
@@ -221,18 +278,19 @@ function Login() {
             To make an account please fill out the form below.
           </DialogContentText>
           <TextField
-            autoFocus
+            error={emailChecker()}
             margin="dense"
             id="email"
-            label="Email"
+            label={emailChecker()? 'Invalid Email':'Email'}
             fullWidth
             onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             autoFocus
+            error={passwordChecker()}
             margin="dense"
             id="password"
-            label="Password"
+            label={passwordChecker()? passWord.length<4?'Password must have more than 4 characters':passWord.length>8?'Password must not exceed more than 8 characters':'':'Password'}
             type="password"
             fullWidth
             onChange={(e) => setPassWord(e.target.value)}
@@ -240,27 +298,30 @@ function Login() {
 
            <TextField
             autoFocus
+            error={firstNameChecker()}
             margin="dense"
             id="firstName"
-            label="First Name"
+            label={firstNameChecker()? 'Invalid First Name': 'First Name'}
             fullWidth
             onChange={(e) => setFirstName(e.target.value)}
           />
 
             <TextField
             autoFocus
+            error={lastNameChecker()}
             margin="dense"
             id="lastName"
-            label="Last Name"
+            label={lastNameChecker()? 'Invalid Last Name':'Last Name'}
             fullWidth
             onChange={(e) => setLastName(e.target.value)}
           />
           <TextField
             autoFocus
+            error={contactChecker()}
             style={{maxlength: 11,}}
             margin="dense"
             id="contact"
-            label="Contact#"
+            label={contactChecker()? 'Invalid Contact Number':'Contact Number'}
             Width='15'
             maxlength='11'
             onChange={(e) => setContact(e.target.value)}
@@ -268,6 +329,7 @@ function Login() {
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <TextField
             autoFocus
+            // error={contactChecker()}
             style={{maxlength: 11,}}
             margin="dense"
             input type = "number"
@@ -284,62 +346,18 @@ function Login() {
         <DialogActions>
         <Stack  direction="row" spacing={2}>
         <Button onClick={handleClose} variant="contained">Cancel</Button>
-        <Button onClick={handleButton}  variant="outlined">Register</Button>
+        <Button disabled={isButtonDisable()} onClick={handleButton}  variant="outlined">Register</Button>
         </Stack>
         </DialogActions>
       </Dialog>
            </div>
               <button className="loginButton" onClick={handleLogin}>Login</button>
-              {/* Alert */}
-            <Stack spacing={2} sx={{ width: '100%' }}>
-              <Snackbar open={emailVerificationOpen} autoHideDuration={4000} onClose={handleSnackClose}>
-              <Alert severity="info">A verification mail has been sent to your email.</Alert>
-              </Snackbar>
-            </Stack>
-            
-            <Stack spacing={2} sx={{ width: '100%' }}>
-              <Snackbar open={fillUpConfirm} autoHideDuration={4000} onClose={handleSnackClose} >
-              <Alert severity="info">Please make sure you have fill up all the form</Alert>
-              </Snackbar>
-            </Stack>
-
-            <Stack spacing={2} sx={{ width: '100%' }}>
-              <Snackbar open={invalidEmailAdd} autoHideDuration={4000} onClose={handleSnackClose} >
-              <Alert severity="info">invalid email address</Alert>
-              </Snackbar>
-            </Stack>
-
-            <Stack spacing={2} sx={{ width: '100%' }}>
-              <Snackbar open={passMore} autoHideDuration={4000} onClose={handleSnackClose} >
-              <Alert severity="info">password must be more than 4 characters</Alert>
-              </Snackbar>
-            </Stack>
-
-            <Stack spacing={2} sx={{ width: '100%' }}>
-              <Snackbar open={passLess} autoHideDuration={4000} onClose={handleSnackClose} >
-              <Alert severity="info">password cannot exceed more than 8 characters</Alert>
-              </Snackbar>
-            </Stack>
-
-            <Stack spacing={2} sx={{ width: '100%' }}>
-              <Snackbar open={invalidName} autoHideDuration={4000} onClose={handleSnackClose} >
-              <Alert severity="info">Make sure you have input proper firstname or lastname</Alert>
-              </Snackbar>
-            </Stack>
-
-            <Stack spacing={2} sx={{ width: '100%' }}>
-              <Snackbar open={invalidContact} autoHideDuration={4000} onClose={handleSnackClose} >
-              <Alert severity="info">please make sure you have input valid contact number</Alert>
-              </Snackbar>
-            </Stack>
           </div>
         </div>
       </div>
     </div>
-
     )}
     </>
-    
   )
 }
 
