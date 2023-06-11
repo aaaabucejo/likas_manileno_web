@@ -20,6 +20,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import AlertDialog from "../../components/alert/AlertDialog";
+import SuccessDialog from "../../components/alert/SuccessDialog"
 
 
 
