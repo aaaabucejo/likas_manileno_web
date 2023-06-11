@@ -88,7 +88,9 @@ function Login() {
     .then(res => {
       console.log(res)
       setOpen(false);
-      setEmailerVerificationOpen(true);
+      // setEmailerVerificationOpen(true);
+      setErrMsg(<SuccessDialog/>);
+
     }).catch((res) =>{
       console.log(res)
     })

@@ -7,8 +7,8 @@ function AlertDialog() {
   return (
     <div className='AlertDIalog'>
     <Stack sx={{ width: '100%' }} spacing={2}>
-    <Alert variant="filled" severity="error">
-    Incorrect credentials, Please try again.
+    <Alert variant="filled" severity="success">
+    Registered Successfully
     </Alert>
   </Stack>
   </div>

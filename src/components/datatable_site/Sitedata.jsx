@@ -564,7 +564,7 @@ function Sitedata(props) {
             <TableCell className="tableCell" align="center">{res.name}</TableCell>
             {/* <TableCell className="tableCell">{getCap(res.name)}{res.name}</TableCell> */}
             <TableCell className="tableCell" align="center">{res.address}</TableCell>
-            <TableCell className="tableCell" align="center">{res.totalevac == 0 ? 'No Evacuee' : res.totalevac}</TableCell>
+            <TableCell className="tableCell" align="center">{res.totalevac == 0 ? 'No Evacuees' : res.totalevac}</TableCell>
             <TableCell  className="tableCell" align="center">{res.capacity}</TableCell>
             <TableCell  className="tableCell" align="center">{res.room}</TableCell>
             <TableCell  className="tableCell" align="center">{res.restroom}</TableCell>

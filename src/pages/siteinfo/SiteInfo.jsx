@@ -92,6 +92,10 @@ function SiteInfo() {
   const[totalcap,setTotalCap] = useState('0');
   const[capacity,setCapacity] = useState("");
   const[username,setUsername] = useState("");
+  const[editResRoom,setEditResRoom] = useState("");
+  const[firstName,setFirstName] = useState("");
+  const[lastName,setLastName] = useState("");
+  const[inoutStatus,setInOutStatus] = useState("");
   
 
   const[id,setId] = useState(state? state._id:'');
@@ -109,6 +113,7 @@ function SiteInfo() {
 
   const[selectedRoom,setSelectedRoom] = useState("");
   const[selectedAddResRoom,setSelectedAddResRoom] = useState("");
+  
   
   
 
@@ -136,7 +141,7 @@ function SiteInfo() {
     }
     
     // dito ma sasave ng database
-    axios.post('https://likasmanileno-api.onrender.com/app/signupRoom',data)
+    axios.post('http://localhost:4000/app/signupRoom',data)
     .then(res => {
       console.log(res)
       setOpen(false);
@@ -155,6 +160,8 @@ function SiteInfo() {
     setOpen(true);
   };
 
+
+  //remove room ito
   const openDelete = (_id,roomName) => {
     setDialogOpen(true);
     setSelectedRoom({_id,roomName})
@@ -177,13 +184,14 @@ function SiteInfo() {
   }
 
 
-  const addResManual=(roomName) =>{
+  const addResManual=() =>{
 
     const data = {
       username: username,
       roomName: selectedAddResRoom
       
     }
+    // console.log(data)
     const foundUser = users.find(user => user.username === data.username && user.roomName === "Removed");
     
     const userHasRoom = users.find(user => user.username === data.username && user.roomName != "Removed")
@@ -196,11 +204,9 @@ function SiteInfo() {
 
     } else {
       // console.log(data)
-      axios.post('https://likasmanileno-api.onrender.com/app/addUsersToRoom',data)
+      axios.post('http://localhost:4000/app/addUsersToRoom',data)
     .then(res => {
       console.log(res)
-      window.location.reload();
-
     }).catch((res) =>{
       console.log(res)
     })
@@ -222,12 +228,8 @@ function SiteInfo() {
       }
     }
   }
-// axios.post('http://localhost:4000/app/updateUsers',data)
-    // .then(res => {
-      
-    // }).catch((res) =>{
-    //   console.log(res)
-    // })
+
+
   // const handleCloseEdit = () => {
   //   setDialogOpen(false);
   // };
@@ -277,6 +279,17 @@ function SiteInfo() {
    
   ];
 
+  const InoutSelect = [
+    {
+      value: 'In',
+      label: 'In',
+    },
+    {
+      value: 'Out',
+      label: 'Out',
+    }
+  ]
+
                 // addResToRoom({id:user.id,email:user.email,roomName:user.roomName})
                   // console.log(addResToRoom)
                   // addResToRoom.push({ id: user._id, username: user.username, roomName: user.roomName });
@@ -286,11 +299,11 @@ function SiteInfo() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const resloc = await axios.post('https://likasmanileno-api.onrender.com/app/getLocation');
+        const resloc = await axios.post('http://localhost:4000/app/getLocation');
         setLocations(resloc.data);
   
-        const resusers = await axios.post('https://likasmanileno-api.onrender.com/app/getUsers');
-        const resrooms = await axios.post('https://likasmanileno-api.onrender.com/app/getRooms');
+        const resusers = await axios.post('http://localhost:4000/app/getUsers');
+        const resrooms = await axios.post('http://localhost:4000/app/getRooms');
   
         const capCounter = [];
         const roomCounter = [];
@@ -343,11 +356,11 @@ function SiteInfo() {
         }
   
         for (let i = 0; i < addResToRoom.length; i++) {
-          await axios.post('https://likasmanileno-api.onrender.com/app/addToRoom', addResToRoom[i]);
+          await axios.post('http://localhost:4000/app/addToRoom', addResToRoom[i]);
         }
   
         for (let i = 0; i < roomCounter.length; i++) {
-          await axios.post('https://likasmanileno-api.onrender.com/app/updateRoomCount', roomCounter[i]);
+          await axios.post('http://localhost:4000/app/updateRoomCount', roomCounter[i]);
         }
   
         const newArr = [];
@@ -359,7 +372,7 @@ function SiteInfo() {
           }
   
           for (let i = 0; i < newArr.length; i++) {
-            await axios.post('https://likasmanileno-api.onrender.com/app/updateLocationTotal', newArr[i]);
+            await axios.post('http://localhost:4000/app/updateLocationTotal', newArr[i]);
           }
         }
       } catch (err) {
@@ -378,11 +391,11 @@ function SiteInfo() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
+      axios.post('http://localhost:4000/app/getUsers')
         .then(resusers => {
           setUsers(resusers.data);
-          // console.log(resusers)
-          axios.post('https://likasmanileno-api.onrender.com/app/getRooms')
+          // console.log(resusers.data.name)
+          axios.post('http://localhost:4000/app/getRooms')
             .then(resrooms => {
               setRooms(resrooms.data)
               // console.log(resloc.data)
@@ -396,7 +409,7 @@ function SiteInfo() {
                 //  console.log(newArr)                         
                 } 
                 for (let i = 0; i < newArr.length; i++) {
-                  axios.post('https://likasmanileno-api.onrender.com/app/updateRoomTotal',newArr[i])
+                  axios.post('http://localhost:4000/app/updateRoomTotal',newArr[i])
                      .then(rescap =>{
                     // console.log(rescap)
                     // console.log(resloc.data)
@@ -425,10 +438,9 @@ function SiteInfo() {
       roomName: 'Removed'
     }
     console.log(data)
-    axios.post('https://likasmanileno-api.onrender.com/app/updateUsers',data)
+    axios.post('http://localhost:4000/app/updateUsers',data)
     .then(res => {
-      window.location.reload();
- 
+      console.log(res)
     }).catch((res) =>{
       console.log(res)
     })
@@ -437,13 +449,14 @@ function SiteInfo() {
 
   const deleteRoom=() =>{
 
-    // console.log(selectedRoom)
-    axios.post('https://likasmanileno-api.onrender.com/app/deleteroom',selectedRoom)
+    console.log(selectedRoom)
+    axios.post('http://localhost:4000/app/deleteroom',selectedRoom)
     .then(res => {
       
       setDialogOpen(false);
       console.log(selectedRoom)
       window.location.reload();
+      
       
     }).catch((res) =>{
       console.log(res)
@@ -454,11 +467,30 @@ function SiteInfo() {
 
 
   const [openEditHotline, setOpenEditHotline] = React.useState(false);
-  const handleEditOpen = () => {
+  const handleEditOpen = (id) => {
+    setEditResRoom(id)
     setOpenEditHotline(true);
   };
 
+  const handleEditSubmit = () => {
+    const data = {
+      _id:editResRoom,
+      firstName: firstName || (editRes && editRes.firstName) || '',
+      lastName: lastName || (editRes && editRes.lastName) || '',
+      inoutStatus: inoutStatus ||  (editRes && editRes.inoutStatus) || '',
+    }
+    console.log(data)
+    axios.post('http://localhost:4000/app/editUsers',data)
+    .then(res => {
+      console.log(res.data)
+    }).catch((res) =>{
+      console.log(res)
+    })
+    
+  };
+
   const handleEditClose = () => {
+   
     setOpenEditHotline(false);
   };
 
@@ -497,20 +529,27 @@ function SiteInfo() {
       groundrupture: groundrupture
     }
     console.log(data)
-    axios.post('https://likasmanileno-api.onrender.com/app/updateLocation',data)
-    .then(res => {
-      console.log(res)
-      setOpenEditHotline(false);
-      // window.location.reload();
-    }).catch((res) =>{
-      console.log(res)
-    })
+    // axios.post('http://localhost:4000/app/updateLocation',data)
+    // .then(res => {
+    //   console.log(res)
+    //   setOpenEditHotline(false);
+    //   // window.location.reload();
+    // }).catch((res) =>{
+    //   console.log(res)
+    // })
    
   }
 
 
   //check if the newName is match to the location name then use it as a default value for edit
   const defaultLocation = locations.find(location => location.name === name);
+  const editRes = users.find(users=> users._id === editResRoom);
+  // console.log(editRes)
+  
+  // console.log(editRes)
+  // console.log('this is the selected edit',editResRoom)
+  // console.log(users.id)
+  // console.log(locations.name)
   
   
   
@@ -575,7 +614,7 @@ function dividedRoom() {
               }}
             >
               <DialogTitle id="alert-dialog-title">
-                {`Add resident in ${rooms.roomName}`}
+                {`Add resident in ${selectedAddResRoom}`}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
@@ -597,7 +636,7 @@ function dividedRoom() {
 
                 <Button onClick={handleClose} variant="contained">Cancel</Button>
                 
-                <Button disabled={addResBtnDisable()} onClick={()=>addResManual(rooms.roomName)}  variant="outlined">ADD</Button>
+                <Button disabled={addResBtnDisable()} onClick={addResManual}  variant="outlined">ADD</Button>
           
               </DialogActions>
             </Dialog>
@@ -621,8 +660,7 @@ function dividedRoom() {
               <TableCell className="tableCell">{res.inoutStatus}</TableCell>
               <TableCell className="tableCell">
               <Button variant="contained" size="small" color="error" onClick={() => removeRes(res._id,res.firstName)}>Delete</Button>
-              &nbsp;&nbsp;
-              <Button  variant="contained" size="small" onClick={handleEditOpen}>Edit</Button>
+              <Button  variant="contained" size="small" onClick={()=>handleEditOpen(res._id)}>Edit</Button>
               </TableCell>
               <Dialog open={openEditHotline} onClose={handleEditClose}>
               <DialogTitle>Edit Resident</DialogTitle>
@@ -635,6 +673,8 @@ function dividedRoom() {
                   margin="dense"
                   id="firstname"
                   label="First Name"
+                  defaultValue={editRes? editRes.firstName: ''}
+                  onChange={(e) => setFirstName(e.target.value)}
                   fullWidth
                 />
                 <TextField
@@ -642,19 +682,30 @@ function dividedRoom() {
                   margin="dense"
                   id="lastname"
                   label="Last Name"
+                  defaultValue={editRes? editRes.lastName: ''}
+                  onChange={(e) => setLastName(e.target.value)}
                   fullWidth
                 />
+                <div>
                 <TextField
-                  autoFocus
-                  margin="dense"
-                  id="inout"
-                  label="In/Out"
-                  fullWidth
-                />
+                      id="outlined-select-selection"
+                      select
+                      label="In/Out"
+                      defaultValue={editRes ? editRes.inoutStatus : ''}
+                      onChange={(e) => setInOutStatus(e.target.value)}
+                      fullWidth
+                    >
+                      {InoutSelect.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                </div>
               </DialogContent>
               <DialogActions>
                 <Button variant="contained" onClick={handleEditClose}>Cancel</Button>
-                <Button variant="outlined" onClick={handleEditClose}>Submit</Button>
+                <Button variant="outlined" onClick={handleEditSubmit}>Submit</Button>
               </DialogActions>
             </Dialog>
             </TableRow>

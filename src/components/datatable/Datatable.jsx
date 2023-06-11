@@ -398,7 +398,7 @@ function List() {
           <TableCell className="tableCellName" align="center">Last Name</TableCell>
           <TableCell className="tableCellName" align="center">Contact No.</TableCell>
           <TableCell className="tableCellName" align="center">Date Admitted</TableCell>
-          <TableCell className="tableCellName" align="center">Site Transfered</TableCell>
+          <TableCell className="tableCellName" align="center">Site Transferred</TableCell>
           <TableCell className="tableCellName" align="center">Address</TableCell>
           <TableCell className="tableCellName" align="center">Age</TableCell>
           <TableCell className="tableCellName" align="center">Status</TableCell>
