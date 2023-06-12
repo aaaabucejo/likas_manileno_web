@@ -20,7 +20,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import AlertDialog from "../../components/alert/AlertDialog";
-import SuccessDialog from "../../components/alert/SuccessDialog"
+import SuccessDialog from "../../components/alert/SuccessDialog";
 
 
 
@@ -38,7 +38,7 @@ function Login() {
   const [passLess, setPassLess] = React.useState(false);
   const [invalidName, setInvalidName] = React.useState(false);
   const [invalidContact, setInvalidContact] = React.useState(false);
-  
+  const [duplicateEmail, setDuplicateEmail] = React.useState(false);
 
   const [open, setOpen] = React.useState(false);
 
@@ -85,18 +85,37 @@ function Login() {
         contact: contact,
         age: age,
       }
-   axios.post('https://likasmanileno-api.onrender.com/app/signupofficials',data)
-    .then(res => {
-      console.log(res)
-      setOpen(false);
-      // setEmailerVerificationOpen(true);
-      setErrMsg(<SuccessDialog/>);
+      const officialWithEmail = officials.find(official => official.email === email);
+      if(officialWithEmail){
+      
+        setDuplicateEmail(true)
 
-    }).catch((res) =>{
-      console.log(res)
-    })
-   
+      }else{
+        axios.post('https://likasmanileno-api.onrender.com/app/signupofficials',data)
+        .then(res => {
+        console.log(res)
+        setOpen(false);
+        setEmailerVerificationOpen(true);
+        setErrMsg(<SuccessDialog/>);
+          }).catch((res) =>{
+            console.log(res)
+          })
+        }
   }
+
+  const[officials,setOfficials] = useState([])
+  useEffect(() => {
+    const fetchPosts = async () => {
+        axios.post('https://likasmanileno-api.onrender.com/app/getofficials')
+            .then(res => {
+                // console.log(res);
+                setOfficials(res.data);
+            }).catch(err => {
+                console.log(err);
+            })
+    };
+    fetchPosts();
+}, []);
 
    
 
@@ -281,10 +300,10 @@ function Login() {
             To make an account please fill out the form below.
           </DialogContentText>
           <TextField
-            error={emailChecker()}
+            error={emailChecker() || duplicateEmail}
             margin="dense"
             id="email"
-            label={emailChecker()? 'Invalid Email':'Email'}
+            label={emailChecker()? 'Invalid Email': duplicateEmail?'This email is already been used':'Email'}
             fullWidth
             onChange={(e) => setEmail(e.target.value)}
           />

@@ -354,6 +354,13 @@ function SiteInfo() {
             roomCounter.push({ name: loc.name, room: totalRoom });
           });
         }
+        for(let i = 0; i < capCounter.length; i++){
+        axios.post('https://likasmanileno-api.onrender.com/app/updateLocationCapacity',capCounter[i])
+          .then(rescap=>{
+          //  console.log(capCounter)
+          //  window.location.reload();
+          });
+        }
   
         for (let i = 0; i < addResToRoom.length; i++) {
           await axios.post('https://likasmanileno-api.onrender.com/app/addToRoom', addResToRoom[i]);
@@ -373,6 +380,7 @@ function SiteInfo() {
   
           for (let i = 0; i < newArr.length; i++) {
             await axios.post('https://likasmanileno-api.onrender.com/app/updateLocationTotal', newArr[i]);
+            
           }
         }
       } catch (err) {
