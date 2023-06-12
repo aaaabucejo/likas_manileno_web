@@ -447,7 +447,7 @@ function Sitedata(props) {
             Width='15'
             onChange={(e) => setCapacity(e.target.value)}
           /> */}
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          
              {/* <TextField
             autoFocus
             margin="dense"
@@ -463,17 +463,17 @@ function Sitedata(props) {
             id="restRooms"
             label="Rest Rooms"
             type="number"
-            Width='15'
+            fullWidth
             onChange={(e) => setRestRoom(e.target.value)}
           />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
              <TextField
             autoFocus
             margin="dense"
             id="kitchen"
             label="Kitchens"
             type="number"
-            Width='15'
+            fullWidth
             onChange={(e) => setKitchen(e.target.value)}
           />
          

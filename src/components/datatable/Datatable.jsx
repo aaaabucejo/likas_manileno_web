@@ -168,7 +168,7 @@ function List() {
       console.log('success')
       // if(res.data != null){
       // setDialogOpen(false);
-      // window.location.reload();
+      window.location.reload();
       // }
     }).catch((res) =>{
       console.log(res)

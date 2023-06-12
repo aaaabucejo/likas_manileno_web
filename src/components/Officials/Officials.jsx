@@ -319,13 +319,16 @@ function Officials() {
               onClose={closeDelete}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
+              BackdropProps={{
+                style:{
+                  backgroundColor: 'rgba(0,0,0,0.15)',
+                },
+              }}
             >
-              <DialogTitle id="alert-dialog-title">
-                {"Delete this user?"}
-              </DialogTitle>
+             
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                 Are you sure do you want to delete this? 
+                 Are you sure do you want to delete this official? 
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
