@@ -141,7 +141,7 @@ function SiteInfo() {
     }
     
     // dito ma sasave ng database
-    axios.post('http://localhost:4000/app/signupRoom',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/signupRoom',data)
     .then(res => {
       console.log(res)
       setOpen(false);
@@ -204,7 +204,7 @@ function SiteInfo() {
 
     } else {
       // console.log(data)
-      axios.post('http://localhost:4000/app/addUsersToRoom',data)
+      axios.post('https://likasmanileno-api.onrender.com/app/addUsersToRoom',data)
     .then(res => {
       console.log(res)
     }).catch((res) =>{
@@ -299,11 +299,11 @@ function SiteInfo() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const resloc = await axios.post('http://localhost:4000/app/getLocation');
+        const resloc = await axios.post('https://likasmanileno-api.onrender.com/app/getLocation');
         setLocations(resloc.data);
   
-        const resusers = await axios.post('http://localhost:4000/app/getUsers');
-        const resrooms = await axios.post('http://localhost:4000/app/getRooms');
+        const resusers = await axios.post('https://likasmanileno-api.onrender.com/app/getUsers');
+        const resrooms = await axios.post('https://likasmanileno-api.onrender.com/app/getRooms');
   
         const capCounter = [];
         const roomCounter = [];
@@ -356,11 +356,11 @@ function SiteInfo() {
         }
   
         for (let i = 0; i < addResToRoom.length; i++) {
-          await axios.post('http://localhost:4000/app/addToRoom', addResToRoom[i]);
+          await axios.post('https://likasmanileno-api.onrender.com/app/addToRoom', addResToRoom[i]);
         }
   
         for (let i = 0; i < roomCounter.length; i++) {
-          await axios.post('http://localhost:4000/app/updateRoomCount', roomCounter[i]);
+          await axios.post('https://likasmanileno-api.onrender.com/app/updateRoomCount', roomCounter[i]);
         }
   
         const newArr = [];
@@ -372,7 +372,7 @@ function SiteInfo() {
           }
   
           for (let i = 0; i < newArr.length; i++) {
-            await axios.post('http://localhost:4000/app/updateLocationTotal', newArr[i]);
+            await axios.post('https://likasmanileno-api.onrender.com/app/updateLocationTotal', newArr[i]);
           }
         }
       } catch (err) {
@@ -391,11 +391,11 @@ function SiteInfo() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      axios.post('http://localhost:4000/app/getUsers')
+      axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
         .then(resusers => {
           setUsers(resusers.data);
           // console.log(resusers.data.name)
-          axios.post('http://localhost:4000/app/getRooms')
+          axios.post('https://likasmanileno-api.onrender.com/app/getRooms')
             .then(resrooms => {
               setRooms(resrooms.data)
               // console.log(resloc.data)
@@ -409,7 +409,7 @@ function SiteInfo() {
                 //  console.log(newArr)                         
                 } 
                 for (let i = 0; i < newArr.length; i++) {
-                  axios.post('http://localhost:4000/app/updateRoomTotal',newArr[i])
+                  axios.post('https://likasmanileno-api.onrender.com/app/updateRoomTotal',newArr[i])
                      .then(rescap =>{
                     // console.log(rescap)
                     // console.log(resloc.data)
@@ -438,7 +438,7 @@ function SiteInfo() {
       roomName: 'Removed'
     }
     console.log(data)
-    axios.post('http://localhost:4000/app/updateUsers',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/updateUsers',data)
     .then(res => {
       console.log(res)
     }).catch((res) =>{
@@ -450,7 +450,7 @@ function SiteInfo() {
   const deleteRoom=() =>{
 
     console.log(selectedRoom)
-    axios.post('http://localhost:4000/app/deleteroom',selectedRoom)
+    axios.post('https://likasmanileno-api.onrender.com/app/deleteroom',selectedRoom)
     .then(res => {
       
       setDialogOpen(false);
@@ -480,7 +480,7 @@ function SiteInfo() {
       inoutStatus: inoutStatus ||  (editRes && editRes.inoutStatus) || '',
     }
     console.log(data)
-    axios.post('http://localhost:4000/app/editUsers',data)
+    axios.post('https://likasmanileno-api.onrender.com/app/editUsers',data)
     .then(res => {
       console.log(res.data)
     }).catch((res) =>{
@@ -529,14 +529,17 @@ function SiteInfo() {
       groundrupture: groundrupture
     }
     console.log(data)
-    // axios.post('http://localhost:4000/app/updateLocation',data)
-    // .then(res => {
-    //   console.log(res)
-    //   setOpenEditHotline(false);
-    //   // window.location.reload();
-    // }).catch((res) =>{
-    //   console.log(res)
-    // })
+    setNewName(name)
+    console.log(newName)
+    axios.post('https://likasmanileno-api.onrender.com/app/updateLocation',data)
+    
+    .then(res => {
+      console.log(res)
+      setOpenEditHotline(false);
+      // window.location.reload();
+    }).catch((res) =>{
+      console.log(res)
+    })
    
   }
 
@@ -558,7 +561,7 @@ function dividedRoom() {
   const newArr = [];
   // const arrUsers = [];
   rooms.map((rooms) => {
-    if (rooms.name === name) {
+    if (rooms.name === newName) {
      //users.name == rooms.name || users.roomName == rooms.roomName
      const { colorRoom, isButtonDisabledRoom } = checkRoomIsEmpty(rooms);
      const { fullRoom, isButtonDisabledFullRoom } = fullRoomChecker(rooms);

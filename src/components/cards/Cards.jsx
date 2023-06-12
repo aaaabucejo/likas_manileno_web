@@ -89,10 +89,10 @@ const[totalsite,setTotalSite] = useState([])
         <div className='cardData'>
         <Card sx={{ minWidth: 275, minHeight: 150, backgroundColor: '#0047AB' }}>
       <CardContent>
-        <Typography variant="h5" component="div" sx={{ minHeight: 45, color:'#fff' }}>
+        <Typography variant="h5" component="div" sx={{ fontWeight: 600,minHeight: 45, color:'#fff' ,paddingLeft: 8}}>
           Number of Citizen
         </Typography>
-        <Typography variant="body2" sx={{fontWeight: 600, fontSize: 45, paddingLeft: 13, color:'#fff'}}>
+        <Typography variant="body2" sx={{fontWeight: 600, fontSize: 45, paddingLeft: 19, color:'#fff'}}>
           {totaldata}
         </Typography>
       </CardContent>
@@ -100,10 +100,10 @@ const[totalsite,setTotalSite] = useState([])
     {/*  */}
     <Card sx={{ minWidth: 275, minHeight: 150, backgroundColor: '#0047AB' }}>
       <CardContent>
-        <Typography variant="h5" component="div" sx={{ minHeight: 45, color:'#fff' }}>
-          Number of seniors
+        <Typography variant="h5" component="div" sx={{ fontWeight: 600,minHeight: 45, color:'#fff' ,paddingLeft: 8}}>
+          Number of Seniors
         </Typography>
-        <Typography variant="body2" sx={{fontWeight: 600, fontSize: 45, paddingLeft: 13, color:'#fff'}}>
+        <Typography variant="body2" sx={{fontWeight: 600, fontSize: 45, paddingLeft: 19, color:'#fff'}}>
           {totalsenior}
         </Typography>
       </CardContent>
@@ -111,10 +111,10 @@ const[totalsite,setTotalSite] = useState([])
      {/*  */}
      <Card sx={{ minWidth: 275, minHeight: 150, backgroundColor: '#0047AB' }}>
       <CardContent>
-        <Typography variant="h5" component="div" sx={{ minHeight: 45, color:'#fff' }}>
-          Number of families
+        <Typography variant="h5" component="div" sx={{ fontWeight: 600,minHeight: 45, color:'#fff' ,paddingLeft: 8}}>
+          Number of Families
         </Typography>
-        <Typography variant="body2" sx={{fontWeight: 600, fontSize: 45, paddingLeft: 13, color:'#fff'}}>
+        <Typography variant="body2" sx={{fontWeight: 600, fontSize: 45, paddingLeft: 19, color:'#fff'}}>
           {[...new Set(totalfam.map((ln)=>ln.lastName.toLowerCase()))].length}
         </Typography>
       </CardContent>
@@ -122,10 +122,10 @@ const[totalsite,setTotalSite] = useState([])
      {/*  */}
      <Card sx={{ minWidth: 275, minHeight: 150, backgroundColor: '#0047AB' }}>
       <CardContent>
-        <Typography variant="h5" component="div" sx={{ minHeight: 45, color:'#fff' }}>
-          Number of evacuation
+        <Typography variant="h5" component="div" sx={{ fontWeight: 600,minHeight: 45, color:'#fff' ,paddingLeft: 7}}>
+          Number of Evacuation
         </Typography>
-        <Typography variant="body2" sx={{fontWeight: 600, fontSize: 45, paddingLeft: 13, color:'#fff'}}>
+        <Typography variant="body2" sx={{fontWeight: 600, fontSize: 45, paddingLeft: 19, color:'#fff'}}>
           {totalsite}
         </Typography>
       </CardContent>

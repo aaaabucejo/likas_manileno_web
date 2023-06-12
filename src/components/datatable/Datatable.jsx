@@ -165,10 +165,11 @@ function List() {
     console.log(selectedUser)
     axios.post('https://likasmanileno-api.onrender.com/app/deleteresident',selectedUser)
     .then(res => {
-      if(res.data != null){
-      setDialogOpen(false);
-      window.location.reload();
-      }
+      console.log('success')
+      // if(res.data != null){
+      // setDialogOpen(false);
+      // window.location.reload();
+      // }
     }).catch((res) =>{
       console.log(res)
     })
@@ -221,7 +222,7 @@ function List() {
                       <span>{"ContactNo: "+users["contactNo"]}</span>
                     </div>
                     <div>
-                      <span>{"Site Transferred "+users["siteT"] }</span>
+                      <span>{"Site Transferred: "+users["name"] }</span>
                     </div>
                     <div>
                       <span>{"Age: "+users["age"] }</span>
@@ -398,7 +399,7 @@ function List() {
           <TableCell className="tableCellName" align="center">Last Name</TableCell>
           <TableCell className="tableCellName" align="center">Contact No.</TableCell>
           <TableCell className="tableCellName" align="center">Date Admitted</TableCell>
-          <TableCell className="tableCellName" align="center">Site Transferred</TableCell>
+          <TableCell className="tableCellName" align="center">Site Transfered</TableCell>
           <TableCell className="tableCellName" align="center">Address</TableCell>
           <TableCell className="tableCellName" align="center">Age</TableCell>
           <TableCell className="tableCellName" align="center">Status</TableCell>

@@ -40,14 +40,15 @@ function List() {
 return (
   <TableContainer component={Paper} className="table">
   <Table sx={{ minWidth: 650 }} aria-label="simple table">
-    <TableHead>
+    <TableHead >
       <TableRow className="rowColor">
+        
         {/* <TableCell className="tableCell">ID No.</TableCell> */}
         <TableCell className="tableCellName" align="center">First Name</TableCell>
         <TableCell className="tableCellName" align="center">Last Name</TableCell>
         <TableCell className="tableCellName" align="center">Contact No.</TableCell>
         <TableCell className="tableCellName" align="center">Date Admitted</TableCell>
-        <TableCell className="tableCellName" align="center">Site Transferred</TableCell>
+        <TableCell className="tableCellName" align="center">Site Transfered</TableCell>
         <TableCell className="tableCellName" align="center">Age</TableCell>
         <TableCell className="tableCellName" align="center">Status</TableCell>
         {/* <TableCell className="tablecell">actions</TableCell> */}
