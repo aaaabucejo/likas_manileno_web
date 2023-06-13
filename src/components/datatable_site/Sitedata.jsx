@@ -272,6 +272,7 @@ function Sitedata(props) {
 
   const handleClose = () => {
     setOpen(false);
+    window.location.reload();
   };
 
   

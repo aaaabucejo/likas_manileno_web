@@ -274,7 +274,7 @@ function Login() {
               id="username"
               ref={userRef}
               autoComplete="on"
-              placeholder="Username" 
+              placeholder="Email" 
               className="loginInput"
               required onChange={(e) => setEmail(e.target.value)}
               value={email}
@@ -303,7 +303,7 @@ function Login() {
             error={emailChecker() || duplicateEmail}
             margin="dense"
             id="email"
-            label={emailChecker()? 'Invalid Email': duplicateEmail?'This email is already been used':'Email'}
+            label={emailChecker()? 'Invalid Email': duplicateEmail?'This email is already being used':'Email'}
             fullWidth
             onChange={(e) => setEmail(e.target.value)}
           />
