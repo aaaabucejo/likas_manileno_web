@@ -134,14 +134,14 @@ function Sitedata(props) {
           // 2 axios
           useEffect(() => {
             const fetchPosts = async () => {
-              axios.post('https://likasmanileno-api.onrender.com/app/getLocation')
+              axios.get('https://likasmanileno-api.onrender.com/app/getLocation')
                 .then(resloc => {
                   setLocations(resloc.data);
-                  axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
+                  axios.get('https://likasmanileno-api.onrender.com/app/getUsers')
                     .then(resusers => {
                       setUser(resusers.data)
                       //add axios.post here getRooms
-                      axios.post('https://likasmanileno-api.onrender.com/app/getRooms')
+                      axios.get('https://likasmanileno-api.onrender.com/app/getRooms')
                       .then(resrooms => {
                         // setRoom(resrooms.data);
                         // Process the rooms data as needed
@@ -166,7 +166,7 @@ function Sitedata(props) {
                         for(let i = 0; i < capCounter.length; i++){
                           axios.post('https://likasmanileno-api.onrender.com/app/updateLocationCapacity',capCounter[i])
                           .then(rescap=>{
-                            // console.log(rescap)
+                            console.log(capCounter)
                           });
                         }
                         for(let i = 0; i < capCounter.length; i++){
@@ -193,7 +193,7 @@ function Sitedata(props) {
                           axios.post('https://likasmanileno-api.onrender.com/app/updateLocationTotal',newArr[i])
                              .then(restotal =>{
                             // console.log(rescap)
-                            // console.log(resloc.data)
+                            
                           }).catch(err =>{
                             console.log(err)
                           })
@@ -217,31 +217,18 @@ function Sitedata(props) {
         
 
     //pag pinindot ko yung submit
-    function handleButton(){ 
-      const data = {
-        name: name,
-        address: address,
-        latitude: latitude,
-        longtitude: longtitude,
-        totalevac: totalevac,
-        capacity: capacity,
-        room: room,
-        restroom: restroom,
-        kitchen: kitchen,
-        flood: flood,
-        groundrupture: groundrupture
-      }
-      console.log(data)
-      //dito ma sasave ng database
-      axios.post('https://likasmanileno-api.onrender.com/app/signuplocation',data)
-      .then(res => {
-        console.log(res.data)
-        setOpen(false);
-        window.location.reload();
-      }).catch(err =>{
-        console.log(err)
-        
-      })
+    function handleButton() {
+      const queryParams = `?name=${name}&address=${address}&latitude=${latitude}&longtitude=${longtitude}&totalevac=${totalevac}&capacity=${capacity}&room=${room}&restroom=${restroom}&kitchen=${kitchen}&flood=${flood}&groundrupture=${groundrupture}`;
+    
+      axios.get(`https://likasmanileno-api.onrender.com/app/signuplocation${queryParams}`)
+        .then(res => {
+          console.log(res.data);
+          setOpen(false);
+          window.location.reload();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
 
   // modal function
@@ -448,7 +435,7 @@ function Sitedata(props) {
             Width='15'
             onChange={(e) => setCapacity(e.target.value)}
           /> */}
-          
+
              {/* <TextField
             autoFocus
             margin="dense"
@@ -467,7 +454,7 @@ function Sitedata(props) {
             fullWidth
             onChange={(e) => setRestRoom(e.target.value)}
           />
-            
+
              <TextField
             autoFocus
             margin="dense"
@@ -502,8 +489,8 @@ function Sitedata(props) {
             aria-labelledby="demo-row-radio-buttons-group-label"
             name="row-radio-buttons-group"
           >
-            <FormControlLabel value="Safe" control={<Radio />} onChange={(e) => setGroundRupture(e.target.value)} label="safe" />
-            <FormControlLabel value="Prone" control={<Radio />} onChange={(e) => setGroundRupture(e.target.value)} label="prone" />
+            <FormControlLabel value="Safe" control={<Radio />} onChange={(e) => setGroundRupture(e.target.value)} label="Safe" />
+            <FormControlLabel value="Prone" control={<Radio />} onChange={(e) => setGroundRupture(e.target.value)} label="Prone" />
 
           </RadioGroup>
           </div>
@@ -565,7 +552,7 @@ function Sitedata(props) {
             <TableCell className="tableCell" align="center">{res.name}</TableCell>
             {/* <TableCell className="tableCell">{getCap(res.name)}{res.name}</TableCell> */}
             <TableCell className="tableCell" align="center">{res.address}</TableCell>
-            <TableCell className="tableCell" align="center">{res.totalevac == 0 ? 'No Evacuees' : res.totalevac}</TableCell>
+            <TableCell className="tableCell" align="center">{res.totalevac == 0 ? 'No Evacuee' : res.totalevac}</TableCell>
             <TableCell  className="tableCell" align="center">{res.capacity}</TableCell>
             <TableCell  className="tableCell" align="center">{res.room}</TableCell>
             <TableCell  className="tableCell" align="center">{res.restroom}</TableCell>

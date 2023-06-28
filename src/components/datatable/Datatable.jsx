@@ -94,36 +94,17 @@ function List() {
     
   };
 
- 
-
- 
-
-  function handleButton(){
-    //pag pinindot ko yung submit
-    const data = {
-      firstName: firstName,
-      lastName: lastName,
-      contactNo: contactNo,
-      name: name,
-      address:address,
-      latitude,latitude,
-      longtitude,longtitude,
-      age: age,
-      status:status,
-      username: username,
-      password: password,
-      roomName:roomName,
-      inoutStatus:inoutStatus
-    }
-    
-    //dito ma sasave ng database
-    axios.post('https://likasmanileno-api.onrender.com/app/signup',data)
-    .then(res => {
-      console.log(res)
-      setOpen(false);
-    }).catch((res) =>{
-      console.log(res)
-    })
+  function handleButton() {
+    const queryParams = `?firstName=${firstName}&lastName=${lastName}&contactNo=${contactNo}&name=${name}&address=${address}&latitude=${latitude}&longtitude=${longtitude}&age=${age}&status=${status}&username=${username}&password=${password}&roomName=${roomName}&inoutStatus=${inoutStatus}`;
+  
+    axios.get(`https://likasmanileno-api.onrender.com/app/signup${queryParams}`)
+      .then(res => {
+        console.log(res);
+        setOpen(false);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   const openDelete = (_id, firstName, lastName) => {
@@ -148,7 +129,7 @@ function List() {
   const [users,setUser] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
+          axios.get('https://likasmanileno-api.onrender.com/app/getUsers')
               .then(res => {
                   // console.log(res);
                   setUser(res.data);

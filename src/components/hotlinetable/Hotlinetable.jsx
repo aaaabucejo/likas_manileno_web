@@ -118,7 +118,7 @@ function Hotlinetable() {
   const [hotline,setHotline] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('https://likasmanileno-api.onrender.com/app/gethotline')
+          axios.get('https://likasmanileno-api.onrender.com/app/gethotline')
               .then(res => {
                   // console.log(res);
                   setHotline(res.data);

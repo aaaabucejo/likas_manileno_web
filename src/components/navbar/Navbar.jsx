@@ -8,7 +8,7 @@ function Navbar() {
   const [users,setUser] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
+          axios.get('https://likasmanileno-api.onrender.com/app/getUsers')
               .then(res => {
                   // console.log(res);
                   setUser(res.data);

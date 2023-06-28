@@ -10,7 +10,7 @@ function Indicator() {
   // const [users,setUser] = useState([]);
   // useEffect(() => {
   //     const fetchPosts = async () => {
-  //         axios.post('http://localhost:4000/app/getUsers')
+  //         axios.get('http://localhost:4000/app/getUsers')
   //             .then(res => {
   //                 console.log(res);
   //                 setUser(res.data);

@@ -209,31 +209,29 @@ function Login() {
     navigate('/')
   }
   var message;
-  function handleLogin(){
-
-    const data = {
-      email: email,
-      passWord: passWord
-    }
-    
-    axios.post('https://likasmanileno-api.onrender.com/app/signin',data)
-    .then(res => {
-      if(res.data.status =='Login Successful'){
-        message = res.data.status;
-        navigate('/')
-         localStorage.setItem('token',res.data.token)
-         console.log(res.data)
-         
-      } else if (res.data.status == 'incorrect username or password'){
-        message = res.data.status;
-        console.log(res.data.status)
-        setErrMsg(<AlertDialog/>);
-      }
-    }).catch((res) =>{
-      // console.log(res)
-      console.log(res)
-    })
+ 
+  function handleLogin() {
+    const queryParams = `?email=${email}&passWord=${passWord}`;
+  
+    axios.get(`https://likasmanileno-api.onrender.com/app/signin${queryParams}`)
+      .then(res => {
+        if (res.data.status === 'Login Successful') {
+          message = res.data.status;
+          navigate('/');
+          localStorage.setItem('token', res.data.token);
+          console.log(res.data);
+        } else if (res.data.status === 'incorrect username or password') {
+          message = res.data.status;
+          console.log(res.data.status);
+          setErrMsg(<AlertDialog/>);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
+
+
 
 
   

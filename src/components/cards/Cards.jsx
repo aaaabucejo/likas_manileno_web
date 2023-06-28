@@ -25,7 +25,7 @@ function Cards() {
   const[totaldata,setTotaldata,] = useState([])
   useEffect(() => {
     const fetchPosts = async () => {
-        axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
+        axios.get('https://likasmanileno-api.onrender.com/app/getUsers')
             .then(res => {
                 // console.log(res);
                 setTotaldata(res.data.length);
@@ -40,7 +40,7 @@ function Cards() {
   const[totalsenior,setTotalSenior] = useState(null)
   useEffect(() => {
     const fetchPosts = async () => {
-        axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
+        axios.get('https://likasmanileno-api.onrender.com/app/getUsers')
             .then(res => {
                 const total = res.data.filter((tl) => tl.age >= 60);
                 setTotalSenior(total.length)
@@ -58,7 +58,7 @@ function Cards() {
 const[totalfam,setTotalFam] = useState([])
 useEffect(() => {
   const fetchPosts = async () => {
-      axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
+      axios.get('https://likasmanileno-api.onrender.com/app/getUsers')
           .then(res => {
            setTotalFam(res.data)    
           //  console.log(res.data)         
@@ -73,7 +73,7 @@ useEffect(() => {
 const[totalsite,setTotalSite] = useState([])
   useEffect(() => {
     const fetchPosts = async () => {
-        axios.post('https://likasmanileno-api.onrender.com/app/getlocation')
+        axios.get('https://likasmanileno-api.onrender.com/app/getlocation')
             .then(res => {
                 // console.log(res);
                 setTotalSite(res.data.length);

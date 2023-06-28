@@ -29,7 +29,7 @@ function Chart({ title} ) {
   const [locations,setLocations] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('https://likasmanileno-api.onrender.com/app/getlocation')
+          axios.get('https://likasmanileno-api.onrender.com/app/getlocation')
               .then(res => {
                   
                   setLocations(res.data);
@@ -98,7 +98,7 @@ function Chart({ title} ) {
           
           <Tooltip />
           <Legend />
-          <Bar dataKey="totalevac" barSize={50} fill="fill" />        
+          <Bar dataKey="totalevac" barSize={50} fill="fill" name="Total Evacuation" />        
         </ComposedChart>
         {/* ))} */}
       </ResponsiveContainer>

@@ -299,11 +299,11 @@ function SiteInfo() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const resloc = await axios.post('https://likasmanileno-api.onrender.com/app/getLocation');
+        const resloc = await axios.get('https://likasmanileno-api.onrender.com/app/getLocation');
         setLocations(resloc.data);
   
-        const resusers = await axios.post('https://likasmanileno-api.onrender.com/app/getUsers');
-        const resrooms = await axios.post('https://likasmanileno-api.onrender.com/app/getRooms');
+        const resusers = await axios.get('https://likasmanileno-api.onrender.com/app/getUsers');
+        const resrooms = await axios.get('https://likasmanileno-api.onrender.com/app/getRooms');
   
         const capCounter = [];
         const roomCounter = [];
@@ -399,11 +399,11 @@ function SiteInfo() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      axios.post('https://likasmanileno-api.onrender.com/app/getUsers')
+      axios.get('https://likasmanileno-api.onrender.com/app/getUsers')
         .then(resusers => {
           setUsers(resusers.data);
           // console.log(resusers.data.name)
-          axios.post('https://likasmanileno-api.onrender.com/app/getRooms')
+          axios.get('https://likasmanileno-api.onrender.com/app/getRooms')
             .then(resrooms => {
               setRooms(resrooms.data)
               // console.log(resloc.data)
@@ -438,22 +438,16 @@ function SiteInfo() {
     fetchPosts();
   }, []);
 
-  const removeRes=(_id,firstName) =>{
-
-    const data = {
-      _id: _id,
-      firstName: firstName,
-      roomName: 'Removed'
-    }
-    console.log(data)
-    axios.post('https://likasmanileno-api.onrender.com/app/updateUsers',data)
-    .then(res => {
-      console.log(res)
-    }).catch((res) =>{
-      console.log(res)
-    })
-  
-  }
+  const removeRes = (_id, firstName) => {
+   
+    axios.get(`https://likasmanileno-api.onrender.com/app/updateUsers?_id=${_id}&firstName=${firstName}&roomName=Removed`)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   const deleteRoom=() =>{
 
@@ -481,20 +475,14 @@ function SiteInfo() {
   };
 
   const handleEditSubmit = () => {
-    const data = {
-      _id:editResRoom,
-      firstName: firstName || (editRes && editRes.firstName) || '',
-      lastName: lastName || (editRes && editRes.lastName) || '',
-      inoutStatus: inoutStatus ||  (editRes && editRes.inoutStatus) || '',
-    }
-    console.log(data)
-    axios.post('https://likasmanileno-api.onrender.com/app/editUsers',data)
-    .then(res => {
-      console.log(res.data)
-    }).catch((res) =>{
-      console.log(res)
-    })
-    
+    const queryParams = `?_id=${editResRoom}&firstName=${firstName || (editRes && editRes.firstName) || ''}&lastName=${lastName || (editRes && editRes.lastName) || ''}&inoutStatus=${inoutStatus || (editRes && editRes.inoutStatus) || ''}`;
+    axios.get(`https://likasmanileno-api.onrender.com/app/editUsers${queryParams}`)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   const handleEditClose = () => {
