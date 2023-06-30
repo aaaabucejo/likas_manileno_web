@@ -13,7 +13,7 @@ function PolyLine() {
   const [locations,setLocations] = useState([]);
   useEffect(() => {
       const fetchPosts = async () => {
-          axios.post('https://likasmanileno-api.onrender.com/app/getlocation')
+          axios.get('https://likasmanileno-api.onrender.com/app/getlocation')
               .then(res => {
                   // console.log(res);
                   setLocations(res.data);

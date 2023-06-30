@@ -33,6 +33,7 @@ import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import GroupIcon from '@mui/icons-material/Group';
 import MenuItem from '@mui/material/MenuItem';
 import Autocomplete from '@mui/material/Autocomplete';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
 
 
 import React,{useEffect,useState, useRef} from "react";
@@ -124,9 +125,15 @@ function SiteInfo() {
   const [open, setOpen] = React.useState(false);
   
   const [Dialogopen, setDialogOpen] = React.useState(false);
+  const [dialogRemoveAllRes, setDialogRemoveAllRes] = React.useState(false)
   const [Editopen, setEditOpen] = React.useState(false);
   const [addResidentDialog, setAddResidentDialog] = React.useState(false);
   const [userNotExist, setUserNotExist] = React.useState(false);
+  //remove all residents
+  const[getName,setGetName] = useState("");
+  const[removeRoomName,setRemoveRoomName] = useState(" ");
+  const[removeName,setRemoveName] = useState(" ");
+
   const status = [
     { label: 'In', },{ label: 'Out', },
   ];
@@ -166,6 +173,11 @@ function SiteInfo() {
     setDialogOpen(true);
     setSelectedRoom({_id,roomName})
   };
+
+  const handleRemoveAllRes = () =>{
+
+    setDialogRemoveAllRes(true);
+  }
 
   const openAddResidentDialog = (roomName) => {
     setAddResidentDialog(true);
@@ -248,6 +260,7 @@ function SiteInfo() {
   const closeDelete = () => {
     setDialogOpen(false);
     setAddResidentDialog(false);
+    setDialogRemoveAllRes(false)
   };
   
 
@@ -332,7 +345,8 @@ function SiteInfo() {
               addResToRoom.push({
                 id: unnamedUsers[i]._id,
                 username: unnamedUsers[i].username,
-                roomName: selectedRoom.roomName
+                roomName: selectedRoom.roomName,
+                inoutStatus: "In"
               });
             }
           }
@@ -465,6 +479,26 @@ function SiteInfo() {
     })
   }
 
+  const deleteAllRes=() =>{
+ 
+    const data = {
+      name:newName,
+    
+    }
+    console.log(data)
+    axios.post('https://likasmanileno-api.onrender.com/app/removeAllRes',data)
+    .then(res => {
+      console.log(res)
+      // setDialogOpen(false);
+      // console.log(selectedRoom)
+      // window.location.reload();
+      
+      
+    }).catch((res) =>{
+      console.log(res)
+    })
+  }
+
 
 
 
@@ -586,7 +620,7 @@ function dividedRoom() {
               }}
             >
               <DialogTitle id="alert-dialog-title">
-                {"Delete this user?"}
+                {"Delete this room?"}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
@@ -659,6 +693,8 @@ function dividedRoom() {
               <TableCell className="tableCell">{res.inoutStatus}</TableCell>
               <TableCell className="tableCell">
               <Button variant="contained" size="small" color="error" onClick={() => removeRes(res._id,res.firstName)}>Delete</Button>
+
+              &nbsp;
               <Button  variant="contained" size="small" onClick={()=>handleEditOpen(res._id)}>Edit</Button>
               </TableCell>
               <Dialog open={openEditHotline} onClose={handleEditClose}>
@@ -905,9 +941,41 @@ function dividedRoom() {
         
           <div className="datatableTitle">
           <div style={{paddingLeft:"15pt"}}>
-      <Button  onClick={handleClickOpen}   startIcon={<AddIcon/>} variant="contained" disableElevation> 
+      <Button  onClick={handleClickOpen}  style={{paddingRight:"10px"}} startIcon={<AddIcon/>} variant="contained" disableElevation> 
       Add Room
       </Button>
+      &nbsp;
+      &nbsp;
+      <Button  onClick={handleRemoveAllRes} startIcon={<NotInterestedIcon/>} variant="contained" disableElevation> 
+      remove all residents
+      </Button>
+
+      <Dialog
+              open={dialogRemoveAllRes}
+              onClose={closeDelete}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              BackdropProps={{
+                style: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.15)', // Adjust the last value (0.5) to change the opacity
+                },
+              }}
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Delete this room?"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                 Are you sure you want remove all residents? 
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+
+                <Button onClick={closeDelete}>Cancel</Button>
+                
+                <Button onClick={deleteAllRes} autoFocus>Delete</Button>           
+              </DialogActions>
+            </Dialog>
       </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle style={{fontWeight: 500,}}>ADD ROOMS </DialogTitle>
