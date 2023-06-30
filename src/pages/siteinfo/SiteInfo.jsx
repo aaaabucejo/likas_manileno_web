@@ -377,7 +377,8 @@ function SiteInfo() {
         }
   
         for (let i = 0; i < addResToRoom.length; i++) {
-          await axios.post('https://likasmanileno-api.onrender.com/app/addToRoom', addResToRoom[i]);
+          // await axios.post('https://likasmanileno-api.onrender.com/app/addToRoom', addResToRoom[i]);
+          console.log(addResToRoom)
         }
   
         for (let i = 0; i < roomCounter.length; i++) {
@@ -457,6 +458,7 @@ function SiteInfo() {
     axios.get(`https://likasmanileno-api.onrender.com/app/updateUsers?_id=${_id}&firstName=${firstName}&roomName=Removed`)
       .then(res => {
         console.log(res);
+        window.location.reload();
       })
       .catch(error => {
         console.log(error);
@@ -513,6 +515,7 @@ function SiteInfo() {
     axios.get(`https://likasmanileno-api.onrender.com/app/editUsers${queryParams}`)
       .then(res => {
         console.log(res.data);
+        window.location.reload();
       })
       .catch(error => {
         console.log(error);
