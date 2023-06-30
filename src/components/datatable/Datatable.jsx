@@ -164,7 +164,8 @@ function List() {
         return '#32CD32'
       }else if(status == 'Forced'){
         return '#FF5733'
-      }  
+      }else if(status == 'Out')
+        return '#000000'  
   };
 
   return (
@@ -395,7 +396,7 @@ function List() {
             <TableCell  className="tableCell" align="center">{res.lastName}</TableCell>
             <TableCell  className="tableCell" align="center">{res.contactNo}</TableCell>
             <TableCell  className="tableCell" align="center">{moment(res.dateAdmitted).format('lll')}</TableCell>
-            <TableCell  className="tableCell" align="center">{res.name}</TableCell>
+            <TableCell  className="tableCell" align="center">{res.name == ''? 'not yet evacuated':res.name }</TableCell>
             <TableCell  className="tableCell" align="center">{res.address}</TableCell>
             <TableCell  className="tableCell" align="center"><span className={`status ${res.age}`}>{res.age}</span></TableCell>            
             <TableCell  className="tableCell" align="center"> <button style={{backgroundColor:`${getColor(res.status)}`, color:'#ffff', fontWeight:'500', border:'none', borderRadius:'4pt', fontSize:'10pt'}} >{res.status}</button></TableCell>
