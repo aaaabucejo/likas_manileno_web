@@ -225,9 +225,9 @@ function List() {
     </div>
     <div className="datatableTitle">
       Evacuees
-      <Button onClick={handleClickOpen}   startIcon={<AddIcon/>} variant="contained" disableElevation> 
+      {/* <Button onClick={handleClickOpen}   startIcon={<AddIcon/>} variant="contained" disableElevation> 
       Add EVACUEE
-      </Button>
+      </Button> */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle style={{fontWeight: 500,}}>ADD EVACUEE</DialogTitle>
         <DialogContent>
