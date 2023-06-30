@@ -377,7 +377,7 @@ function SiteInfo() {
         }
   
         for (let i = 0; i < addResToRoom.length; i++) {
-          // await axios.post('https://likasmanileno-api.onrender.com/app/addToRoom', addResToRoom[i]);
+          await axios.post('https://likasmanileno-api.onrender.com/app/addToRoom', addResToRoom[i]);
           console.log(addResToRoom)
         }
   
